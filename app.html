@@ -6,18 +6,19 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MERKS — Messenger</title>
 <style>
-:root{--bg:#070a16;--panel:#10172b;--line:#ffffff13;--blue:#6384ff;--purple:#9868ef;--muted:#8793b4;--text:#f3f5ff}
+:root{--bg:#070a16;--panel:#0c1223;--panel2:#10172b;--line:#ffffff16;--blue:#6384ff;--purple:#9868ef;--muted:#8793b4;--text:#f3f5ff}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font:14px Inter,Segoe UI,Arial,sans-serif;height:100vh;overflow:hidden}
 #stars{position:fixed;inset:0;width:100%;height:100%;z-index:-1;opacity:.6}
-.shell{height:100vh;display:grid;grid-template-columns:340px 1fr;max-width:1500px;margin:auto;background:#080d1dcc;border-left:1px solid var(--line);border-right:1px solid var(--line)}
+.shell{height:100vh;display:grid;grid-template-columns:340px 1fr;max-width:1500px;margin:auto;background:#080d1ddd;border-inline:1px solid var(--line)}
 .sidebar{background:#0c1223ed;border-right:1px solid var(--line);display:flex;flex-direction:column;min-width:0}
 .top{height:72px;display:flex;align-items:center;gap:12px;padding:0 18px;border-bottom:1px solid var(--line)}
 .logo{width:34px;height:34px}
 .top b{letter-spacing:4px;font-size:20px}
 .top small{color:var(--muted);margin-left:auto}
 .search{padding:14px}
-.search input,.composer input,.modal input,.modal textarea{width:100%;background:#080e20;border:1px solid var(--line);border-radius:11px;padding:12px;color:white;outline:none}
+.search input,.composer input,.modal input,.modal textarea,.modal select{width:100%;background:#080e20;border:1px solid var(--line);border-radius:11px;padding:12px;color:white;outline:none}
+.search input:focus,.composer input:focus,.modal input:focus,.modal textarea:focus{border-color:var(--blue)}
 .section{padding:0 17px 10px;color:var(--muted);font-size:11px;letter-spacing:1.5px;text-transform:uppercase}
 .chatlist{overflow:auto;flex:1}
 .chat{display:flex;gap:12px;padding:12px 16px;cursor:pointer;border-left:3px solid transparent}
@@ -29,51 +30,64 @@ body{margin:0;background:var(--bg);color:var(--text);font:14px Inter,Segoe UI,Ar
 .chatline strong{font-size:14px}
 .chatline time,.preview{color:var(--muted);font-size:11px}
 .preview{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:6px}
-.bottom{padding:13px;border-top:1px solid var(--line);display:flex;gap:8px}
+.bottom{padding:12px;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .btn{border:1px solid var(--line);background:#151e36;color:#dce3ff;border-radius:10px;padding:10px 12px;cursor:pointer}
 .btn:hover{background:#26365f}
 .btn.primary{background:linear-gradient(110deg,#5d7fff,#9668e9);border:0;color:white}
-.bottom .btn{flex:1}
+.btn.full{width:100%}
 .main{display:flex;flex-direction:column;min-width:0;background:linear-gradient(145deg,#090f20e8,#0a0d1be8)}
-.welcome{margin:auto;text-align:center;color:var(--muted);max-width:380px;padding:25px}
+.welcome{margin:auto;text-align:center;color:var(--muted);max-width:390px;padding:25px}
 .welcome svg{width:90px;opacity:.9}
 .welcome h2{color:white;letter-spacing:3px}
 .chathead{height:72px;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 22px;gap:12px}
-.chathead .meta{flex:1}
+.chathead .meta{flex:1;min-width:0}
 .chathead small{display:block;color:var(--muted);margin-top:4px}
 .messages{flex:1;overflow:auto;padding:24px clamp(15px,5vw,70px);display:flex;flex-direction:column;gap:10px}
 .bubble{max-width:min(70%,560px);padding:11px 14px;border-radius:15px;background:#17213a;align-self:flex-start;line-height:1.45;overflow-wrap:anywhere}
 .bubble.mine{background:linear-gradient(120deg,#3857b5,#6548a6);align-self:flex-end}
 .bubble time{display:block;text-align:right;color:#c1c9e7aa;font-size:10px;margin-top:5px}
-.bubble audio{max-width:100%}
+.bubble audio{max-width:100%;width:230px}
 .composer{padding:14px 20px 18px;display:flex;gap:9px;border-top:1px solid var(--line);align-items:center}
-.composer input{flex:1}
+.composer input{flex:1;min-width:0}
 .composer .btn{white-space:nowrap}
 .empty{margin:auto;color:var(--muted)}
 .overlay{position:fixed;inset:0;background:#02040bc9;display:none;place-items:center;padding:18px;z-index:5}
 .overlay.show{display:grid}
-.modal{width:min(440px,100%);background:#10182d;border:1px solid #8296ff44;border-radius:18px;padding:22px;box-shadow:0 20px 70px #000b}
+.modal{width:min(460px,100%);max-height:90vh;overflow:auto;background:#10182d;border:1px solid #8296ff44;border-radius:18px;padding:22px;box-shadow:0 20px 70px #000b}
 .modal h3{margin:0 0 16px}
-.modal input,.modal textarea{margin:7px 0 12px}
+.modal input,.modal textarea,.modal select{margin:7px 0 12px}
 .modal textarea{min-height:80px;resize:vertical}
-.modal-actions{display:flex;gap:8px;justify-content:flex-end}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
 .people{max-height:220px;overflow:auto}
 .person{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
 .person span{flex:1}
 .callbox{text-align:center;padding:20px}
 .callbox .avatar{width:90px;height:90px;margin:10px auto 20px;font-size:28px}
+.setting-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.setting-row small{display:block;color:var(--muted);margin-top:4px}
+.setting-row input[type=checkbox]{width:auto;margin:0}
+.hint{font-size:12px;color:var(--muted);line-height:1.5}
+.back{display:none}
+body.light{--bg:#e9edf8;--panel:#f5f7ff;--panel2:#fff;--line:#26345a20;--text:#17213b;--muted:#65708c}
+body.light .shell,body.light .sidebar,body.light .main{background:#f0f3fc}
+body.light .search input,body.light .composer input,body.light .modal input,body.light .modal textarea{background:#fff;color:#17213b}
+body.light .chat:hover,body.light .chat.active{background:#dfe6fb}
+body.light .bubble{background:#e1e8fb;color:#17213b}
+body.light .bubble.mine{background:#687fe0;color:white}
+body.light .btn{background:#e2e8fa;color:#17213b}
 @media(max-width:720px){
 .shell{grid-template-columns:1fr}
 .sidebar{display:flex}
 .main{display:none}
 .shell.inchat .sidebar{display:none}
 .shell.inchat .main{display:flex}
-.chathead{height:64px}
+.chathead{height:64px;padding:0 12px}
 .messages{padding:15px}
 .bubble{max-width:86%}
 .back{display:inline-block!important}
+.composer{padding:10px}
+.composer .btn{padding:10px 9px}
 }
-.back{display:none}
 </style>
 </head>
 <body>
@@ -81,60 +95,63 @@ body{margin:0;background:var(--bg);color:var(--text);font:14px Inter,Segoe UI,Ar
 
 <div class="shell" id="shell">
 <aside class="sidebar">
-<div class="top">
-<svg class="logo" viewBox="0 0 100 100">
-<path fill="#f6f7ff" d="M9 54 37 42 23 17 51 32 72 9 68 39 96 47 70 57 87 82 57 69 39 92 39 64Z"/>
-</svg>
-<b>MERKS</b><small>BETA</small>
-</div>
+ <div class="top">
+  <svg class="logo" viewBox="0 0 100 100">
+   <path fill="#f6f7ff" d="M9 54 37 42 23 17 51 32 72 9 68 39 96 47 70 57 87 82 57 69 39 92 39 64Z"/>
+  </svg>
+  <b>MERKS</b><small>BETA 0.4</small>
+ </div>
 
-<div class="search">
-<input id="search" placeholder="Поиск чатов и людей...">
-</div>
-<div class="section">Сообщения</div>
-<div class="chatlist" id="chatList"></div>
+ <div class="search">
+  <input id="search" placeholder="Поиск чатов...">
+ </div>
 
-<div class="bottom">
-<button class="btn" id="newGroup">＋ Группа</button>
-<button class="btn" id="findPeople">⌕ Люди</button>
-<button class="btn" id="myProfile">Профиль</button>
-</div>
+ <div class="section">Чаты</div>
+ <div class="chatlist" id="chatList"></div>
+
+ <div class="bottom">
+  <button class="btn" id="newGroup">＋ Группа</button>
+  <button class="btn" id="findPeople">⌕ Люди</button>
+  <button class="btn" id="myProfile">Профиль</button>
+  <button class="btn" id="settings">⚙ Настройки</button>
+ </div>
 </aside>
 
-<main class="main" id="main">
-<div class="welcome" id="welcome">
-<svg viewBox="0 0 100 100">
-<path fill="#f6f7ff" d="M9 54 37 42 23 17 51 32 72 9 68 39 96 47 70 57 87 82 57 69 39 92 39 64Z"/>
-</svg>
-<h2>MERKS</h2>
-<p>Выбери чат слева или найди людей, чтобы начать общение.</p>
-</div>
+<main class="main">
+ <div class="welcome" id="welcome">
+  <svg viewBox="0 0 100 100">
+   <path fill="#f6f7ff" d="M9 54 37 42 23 17 51 32 72 9 68 39 96 47 70 57 87 82 57 69 39 92 39 64Z"/>
+  </svg>
+  <h2>MERKS</h2>
+  <p>Выбери чат слева или найди людей, чтобы начать общение.</p>
+  <p class="hint">Тестовый аккаунт уже создан на этом устройстве.</p>
+ </div>
 
-<div id="conversation" style="display:none;flex:1;min-height:0;flex-direction:column">
-<header class="chathead">
-<button class="btn back" id="back">←</button>
-<div class="avatar" id="headAvatar">M</div>
-<div class="meta">
-<strong id="headName">Чат</strong>
-<small id="headStatus">Локальный чат</small>
-</div>
-<button class="btn" id="voiceCall" title="Голосовой звонок">☎</button>
-<button class="btn" id="videoCall" title="Видеозвонок">▣</button>
-</header>
+ <div id="conversation" style="display:none;flex:1;min-height:0;flex-direction:column">
+  <header class="chathead">
+   <button class="btn back" id="back">←</button>
+   <div class="avatar" id="headAvatar">M</div>
+   <div class="meta">
+    <strong id="headName">Чат</strong>
+    <small id="headStatus">Локальный чат</small>
+   </div>
+   <button class="btn" id="voiceCall" title="Голосовой звонок">☎</button>
+   <button class="btn" id="videoCall" title="Видеозвонок">▣</button>
+  </header>
 
-<div class="messages" id="messages"></div>
+  <div class="messages" id="messages"></div>
 
-<div class="composer">
-<button class="btn" id="record">🎙</button>
-<input id="messageInput" placeholder="Написать сообщение..." maxlength="4000">
-<button class="btn primary" id="send">Отправить</button>
-</div>
-</div>
+  <div class="composer">
+   <button class="btn" id="record" title="Записать голосовое">🎙</button>
+   <input id="messageInput" placeholder="Написать сообщение..." maxlength="4000">
+   <button class="btn primary" id="send">➤</button>
+  </div>
+ </div>
 </main>
 </div>
 
 <div class="overlay" id="overlay">
-<div class="modal" id="modal"></div>
+ <div class="modal" id="modal"></div>
 </div>
 
 <script>
@@ -142,354 +159,475 @@ const $=id=>document.getElementById(id);
 const USERS='merks_users_v1';
 const SESSION='merks_session_v1';
 const CHATS='merks_chats_v1';
+const DEMO_PHONE='+380000000001';
 
-const phone=localStorage.getItem(SESSION);
-const allUsers=()=>JSON.parse(localStorage.getItem(USERS)||'[]');
-const me=allUsers().find(u=>u.phone===phone);
+let users=JSON.parse(localStorage.getItem(USERS)||'[]');
+let demo=users.find(u=>u.phone===DEMO_PHONE);
 
-if(!me){location.href='index.html'}
+if(!demo){
+ demo={
+  id:'merks-demo-account',
+  name:'MERKS Тест',
+  phone:DEMO_PHONE,
+  password:'',
+  bio:'Тестовый аккаунт MERKS',
+  avatar:'',
+  created:Date.now(),
+  demo:true
+ };
+ users.push(demo);
+ localStorage.setItem(USERS,JSON.stringify(users));
+}
+
+let phone=localStorage.getItem(SESSION);
+
+if(!phone){
+ phone=DEMO_PHONE;
+ localStorage.setItem(SESSION,phone);
+}
+
+let me=users.find(u=>u.phone===phone);
+
+if(!me){
+ localStorage.setItem(SESSION,DEMO_PHONE);
+ phone=DEMO_PHONE;
+ me=demo;
+}
 
 let chats=JSON.parse(localStorage.getItem(CHATS)||'[]');
 let active=null;
-let recording=null;
 let recorder=null;
+let recording=false;
 let parts=[];
 
+if(chats.length===0){
+ chats.push({
+  id:'merks-welcome-chat',
+  type:'group',
+  name:'MERKS — Тестовый чат',
+  members:[me.id],
+  created:Date.now(),
+  messages:[
+   {from:'merks-system',text:'Добро пожаловать в MERKS! Это демонстрационный чат.',time:Date.now()-120000},
+   {from:'merks-system',text:'Проверь отправку текста и голосовых сообщений 🎙',time:Date.now()-60000}
+  ]
+ });
+ localStorage.setItem(CHATS,JSON.stringify(chats));
+}
+
 function save(){
-localStorage.setItem(CHATS,JSON.stringify(chats));
+ localStorage.setItem(CHATS,JSON.stringify(chats));
 }
 
 function initials(s){
-return (s||'?').trim().slice(0,1).toUpperCase();
-}
-
-function getChat(id){
-return chats.find(c=>c.id===id);
-}
-
-function ensureDirect(user){
-let c=chats.find(x=>x.type==='direct'&&x.members.includes(me.id)&&x.members.includes(user.id));
-
-if(!c){
-c={
-id:crypto.randomUUID(),
-type:'direct',
-name:user.name,
-members:[me.id,user.id],
-messages:[],
-created:Date.now()
-};
-chats.unshift(c);
-save();
-}
-return c;
-}
-
-function chatTitle(c){
-if(c.type==='group')return c.name;
-let other=allUsers().find(u=>u.id!==me.id&&c.members.includes(u.id));
-return other?.name||c.name||'Удалённый пользователь';
-}
-
-function last(c){
-return c.messages?.at(-1)?.text||(c.messages?.length?'Вложение':'Нет сообщений');
+ return (s||'?').trim().slice(0,1).toUpperCase();
 }
 
 function esc(s){
-return String(s??'').replace(/[&<>"']/g,c=>({
-'&':'&amp;',
-'<':'&lt;',
-'>':'&gt;',
-'"':'&quot;',
-"'":'&#39;'
-}[c]));
+ return String(s??'').replace(/[&<>"']/g,c=>({
+  '&':'&amp;',
+  '<':'&lt;',
+  '>':'&gt;',
+  '"':'&quot;',
+  "'":'&#39;'
+ }[c]));
+}
+
+function getChat(id){
+ return chats.find(c=>c.id===id);
+}
+
+function otherMember(c){
+ return users.find(u=>u.id!==me.id&&c.members.includes(u.id));
+}
+
+function chatTitle(c){
+ return c.type==='group'?c.name:(otherMember(c)?.name||c.name||'Личный чат');
+}
+
+function last(c){
+ let m=c.messages?.at(-1);
+ return m?.text||(m?.audio?'🎙 Голосовое сообщение':c.messages?.length?'Вложение':'Нет сообщений');
+}
+
+function ensureDirect(u){
+ let c=chats.find(x=>x.type==='direct'&&x.members.includes(me.id)&&x.members.includes(u.id));
+ if(!c){
+  c={
+   id:crypto.randomUUID(),
+   type:'direct',
+   name:u.name,
+   members:[me.id,u.id],
+   messages:[],
+   created:Date.now()
+  };
+  chats.unshift(c);
+  save();
+ }
+ return c;
 }
 
 function renderChats(){
-let q=$('search').value.toLowerCase();
-let visible=chats.filter(c=>
-chatTitle(c).toLowerCase().includes(q)||
-last(c).toLowerCase().includes(q)
-);
+ let q=$('search').value.toLowerCase();
+ let list=chats.filter(c=>
+  chatTitle(c).toLowerCase().includes(q)||
+  last(c).toLowerCase().includes(q)
+ );
 
-$('chatList').innerHTML=visible.map(c=>`
-<div class="chat ${active===c.id?'active':''}" data-id="${c.id}">
-<div class="avatar">${esc(initials(chatTitle(c)))}</div>
-<div class="chatinfo">
-<div class="chatline">
-<strong>${esc(chatTitle(c))}</strong>
-<time>${c.messages?.length?new Date(c.messages.at(-1).time).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):''}</time>
-</div>
-<div class="preview">${esc(last(c))}</div>
-</div>
-</div>
-`).join('')||'<div class="empty" style="padding:25px">Чаты не найдены</div>';
+ $('chatList').innerHTML=list.map(c=>`
+  <div class="chat ${active===c.id?'active':''}" data-id="${c.id}">
+   <div class="avatar">${esc(initials(chatTitle(c)))}</div>
+   <div class="chatinfo">
+    <div class="chatline">
+     <strong>${esc(chatTitle(c))}</strong>
+     <time>${c.messages?.length?new Date(c.messages.at(-1).time).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):''}</time>
+    </div>
+    <div class="preview">${esc(last(c))}</div>
+   </div>
+  </div>
+ `).join('')||'<div class="empty" style="padding:25px">Чаты не найдены</div>';
 
-document.querySelectorAll('.chat').forEach(el=>{
-el.onclick=()=>openChat(el.dataset.id);
-});
+ document.querySelectorAll('.chat').forEach(el=>{
+  el.onclick=()=>openChat(el.dataset.id);
+ });
 }
 
 function openChat(id){
-active=id;
-let c=getChat(id);
-$('welcome').style.display='none';
-$('conversation').style.display='flex';
-$('shell').classList.add('inchat');
-$('headName').textContent=chatTitle(c);
-$('headAvatar').textContent=initials(chatTitle(c));
-$('headStatus').textContent=c.type==='group'?'Групповой чат · локально':'Личный чат · локально';
-renderMessages();
-renderChats();
+ active=id;
+ let c=getChat(id);
+ $('welcome').style.display='none';
+ $('conversation').style.display='flex';
+ $('shell').classList.add('inchat');
+ $('headName').textContent=chatTitle(c);
+ $('headAvatar').textContent=initials(chatTitle(c));
+ $('headStatus').textContent=c.type==='group'?'Групповой чат · локально':'Личный чат · локально';
+ renderMessages();
+ renderChats();
 }
 
 function renderMessages(){
-let c=getChat(active);
-$('messages').innerHTML=(c.messages||[]).map(m=>`
-<div class="bubble ${m.from===me.id?'mine':''}">
-${m.audio?`<audio controls src="${m.audio}"></audio>`:esc(m.text)}
-<time>${new Date(m.time).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</time>
-</div>
-`).join('')||'<div class="empty">Пока нет сообщений. Напиши первым!</div>';
+ let c=getChat(active);
 
-$('messages').scrollTop=$('messages').scrollHeight;
+ $('messages').innerHTML=(c.messages||[]).map(m=>`
+  <div class="bubble ${m.from===me.id?'mine':''}">
+   ${m.audio?`<audio controls preload="metadata" src="${m.audio}"></audio>`:esc(m.text)}
+   <time>${new Date(m.time).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</time>
+  </div>
+ `).join('')||'<div class="empty">Пока нет сообщений. Напиши первым!</div>';
+
+ $('messages').scrollTop=$('messages').scrollHeight;
 }
 
 function send(text){
-if(!text.trim()||!active)return;
-let c=getChat(active);
-c.messages.push({from:me.id,text:text.trim(),time:Date.now()});
-save();
-$('messageInput').value='';
-renderMessages();
-renderChats();
+ if(!text.trim()||!active)return;
+ getChat(active).messages.push({
+  from:me.id,
+  text:text.trim(),
+  time:Date.now()
+ });
+ save();
+ $('messageInput').value='';
+ renderMessages();
+ renderChats();
 }
 
 $('send').onclick=()=>send($('messageInput').value);
+
 $('messageInput').addEventListener('keydown',e=>{
-if(e.key==='Enter')send($('messageInput').value);
+ if(e.key==='Enter')send($('messageInput').value);
 });
+
 $('search').oninput=renderChats;
 
 $('back').onclick=()=>{
-$('shell').classList.remove('inchat');
-$('conversation').style.display='none';
-$('welcome').style.display='block';
-active=null;
-renderChats();
+ $('shell').classList.remove('inchat');
+ $('conversation').style.display='none';
+ $('welcome').style.display='block';
+ active=null;
+ renderChats();
 };
 
 function showModal(html){
-$('modal').innerHTML=html;
-$('overlay').classList.add('show');
+ $('modal').innerHTML=html;
+ $('overlay').classList.add('show');
 }
 
 function closeModal(){
-$('overlay').classList.remove('show');
+ $('overlay').classList.remove('show');
 }
 
 $('overlay').onclick=e=>{
-if(e.target===$('overlay'))closeModal();
+ if(e.target===$('overlay'))closeModal();
 };
 
 $('findPeople').onclick=()=>{
-let others=allUsers().filter(u=>u.id!==me.id);
+ let others=users.filter(u=>u.id!==me.id);
 
-showModal(`
-<h3>Найти людей</h3>
-<input id="peopleSearch" placeholder="Имя или телефон">
-<div class="people" id="people">${peopleHtml(others)}</div>
-<div class="modal-actions">
-<button class="btn" id="close">Закрыть</button>
-</div>
-`);
+ showModal(`
+  <h3>Найти людей</h3>
+  <input id="peopleSearch" placeholder="Имя или телефон">
+  <div class="people" id="people">${peopleHtml(others)}</div>
+  <div class="modal-actions">
+   <button class="btn" id="close">Закрыть</button>
+  </div>
+ `);
 
-$('close').onclick=closeModal;
+ $('close').onclick=closeModal;
 
-$('peopleSearch').oninput=()=>{
-$('people').innerHTML=peopleHtml(
-others.filter(u=>(u.name+' '+u.phone).toLowerCase().includes($('peopleSearch').value.toLowerCase()))
-);
-wirePeople();
-};
+ $('peopleSearch').oninput=()=>{
+  $('people').innerHTML=peopleHtml(
+   others.filter(u=>(u.name+' '+u.phone).toLowerCase().includes($('peopleSearch').value.toLowerCase()))
+  );
+  wirePeople();
+ };
 
-wirePeople();
+ wirePeople();
 };
 
 function peopleHtml(list){
-return list.map(u=>`
-<div class="person">
-<div class="avatar">${esc(initials(u.name))}</div>
-<span>${esc(u.name)}
-<small style="display:block;color:#8793b4">${esc(u.phone)}</small>
-</span>
-<button class="btn" data-user="${u.id}">Написать</button>
-</div>
-`).join('')||'<p style="color:#8793b4">Пока нет других аккаунтов на этом устройстве.</p>';
+ return list.map(u=>`
+  <div class="person">
+   <div class="avatar">${esc(initials(u.name))}</div>
+   <span>
+    ${esc(u.name)}
+    <small style="display:block;color:var(--muted)">${esc(u.phone)} ${u.demo?'· тестовый':''}</small>
+   </span>
+   <button class="btn" data-user="${u.id}">Чат</button>
+  </div>
+ `).join('')||'<p class="hint">Других аккаунтов пока нет.</p>';
 }
 
 function wirePeople(){
-document.querySelectorAll('[data-user]').forEach(b=>{
-b.onclick=()=>{
-let u=allUsers().find(x=>x.id===b.dataset.user);
-let c=ensureDirect(u);
-closeModal();
-openChat(c.id);
-};
-});
+ document.querySelectorAll('[data-user]').forEach(b=>{
+  b.onclick=()=>{
+   let u=users.find(x=>x.id===b.dataset.user);
+   let c=ensureDirect(u);
+   closeModal();
+   openChat(c.id);
+  };
+ });
 }
 
 $('newGroup').onclick=()=>{
-let others=allUsers().filter(u=>u.id!==me.id);
+ let others=users.filter(u=>u.id!==me.id);
 
-showModal(`
-<h3>Создать группу</h3>
-<input id="groupName" placeholder="Название группы">
-<p style="color:#8793b4">Выбери участников (тестовые аккаунты этого браузера)</p>
-<div class="people">
-${others.map(u=>`
-<label class="person">
-<input type="checkbox" value="${u.id}" style="width:auto">
-<span>${esc(u.name)}</span>
-</label>
-`).join('')||'Нет других пользователей'}
-</div>
-<div class="modal-actions">
-<button class="btn" id="cancel">Отмена</button>
-<button class="btn primary" id="create">Создать</button>
-</div>
-`);
+ showModal(`
+  <h3>Новая группа</h3>
+  <input id="groupName" placeholder="Название группы">
+  <p class="hint">Выбери участников</p>
+  <div class="people">
+   ${others.map(u=>`
+    <label class="person">
+     <input type="checkbox" value="${u.id}" style="width:auto">
+     <span>${esc(u.name)}</span>
+    </label>
+   `).join('')||'Пока нет других пользователей'}
+  </div>
+  <div class="modal-actions">
+   <button class="btn" id="cancel">Отмена</button>
+   <button class="btn primary" id="create">Создать</button>
+  </div>
+ `);
 
-$('cancel').onclick=closeModal;
+ $('cancel').onclick=closeModal;
 
-$('create').onclick=()=>{
-let name=$('groupName').value.trim();
-if(!name)return alert('Введи название группы');
+ $('create').onclick=()=>{
+  let name=$('groupName').value.trim();
+  if(!name)return alert('Введи название группы');
 
-let ids=[
-me.id,
-...[...document.querySelectorAll('.people input:checked')].map(x=>x.value)
-];
+  let ids=[
+   me.id,
+   ...[...document.querySelectorAll('.people input:checked')].map(x=>x.value)
+  ];
 
-let c={
-id:crypto.randomUUID(),
-type:'group',
-name,
-members:ids,
-messages:[],
-created:Date.now()
+  let c={
+   id:crypto.randomUUID(),
+   type:'group',
+   name,
+   members:ids,
+   messages:[],
+   created:Date.now()
+  };
+
+  chats.unshift(c);
+  save();
+  closeModal();
+  renderChats();
+  openChat(c.id);
+ };
 };
 
-chats.unshift(c);
-save();
-closeModal();
-renderChats();
-openChat(c.id);
+$('myProfile').onclick=()=>{
+ showModal(`
+  <h3>Мой профиль</h3>
+  <div class="avatar" style="width:64px;height:64px;margin-bottom:12px">${esc(initials(me.name))}</div>
+  <label>Имя</label>
+  <input id="profileName" value="${esc(me.name)}">
+  <label>О себе</label>
+  <textarea id="profileBio">${esc(me.bio||'')}</textarea>
+  <label>Ссылка на аватар</label>
+  <input id="profileAvatar" value="${esc(me.avatar||'')}" placeholder="https://...">
+  <div class="modal-actions">
+   <button class="btn" id="cancelProfile">Отмена</button>
+   <button class="btn primary" id="saveProfile">Сохранить</button>
+  </div>
+ `);
+
+ $('cancelProfile').onclick=closeModal;
+
+ $('saveProfile').onclick=()=>{
+  let list=JSON.parse(localStorage.getItem(USERS)||'[]');
+  let u=list.find(x=>x.id===me.id);
+
+  u.name=$('profileName').value.trim()||u.name;
+  u.bio=$('profileBio').value;
+  u.avatar=$('profileAvatar').value.trim();
+
+  localStorage.setItem(USERS,JSON.stringify(list));
+
+  me.name=u.name;
+  me.bio=u.bio;
+  me.avatar=u.avatar;
+
+  closeModal();
+  renderChats();
+  if(active)openChat(active);
+ };
 };
+
+$('settings').onclick=()=>{
+ showModal(`
+  <h3>⚙ Настройки MERKS</h3>
+
+  <div class="setting-row">
+   <div><b>Тёмная тема</b><small>Космический стиль MERKS</small></div>
+   <input type="checkbox" id="darkTheme" ${!document.body.classList.contains('light')?'checked':''}>
+  </div>
+
+  <div class="setting-row">
+   <div><b>Звуковые эффекты</b><small>Настройка уведомлений (интерфейс)</small></div>
+   <input type="checkbox" id="sounds" checked>
+  </div>
+
+  <div class="setting-row">
+   <div><b>Язык</b><small>Язык интерфейса</small></div>
+   <select id="language" style="width:115px">
+    <option value="ru">Русский</option>
+    <option value="uk">Українська</option>
+    <option value="en">English</option>
+   </select>
+  </div>
+
+  <hr style="border-color:var(--line)">
+
+  <b>Тестовый аккаунт</b>
+  <p class="hint">
+   Телефон: ${DEMO_PHONE}<br>
+   Тестовый аккаунт создаётся автоматически при первом открытии приложения и уже активен.
+  </p>
+
+  <p class="hint">
+   Данные чатов хранятся только в этом браузере. Не очищай данные сайта, если хочешь сохранить тестовые переписки.
+  </p>
+
+  <div class="modal-actions">
+   <button class="btn" id="logout">Выйти</button>
+   <button class="btn primary" id="closeSettings">Готово</button>
+  </div>
+ `);
+
+ $('darkTheme').onchange=e=>{
+  document.body.classList.toggle('light',!e.target.checked);
+ };
+
+ $('closeSettings').onclick=closeModal;
+
+ $('logout').onclick=()=>{
+  localStorage.removeItem(SESSION);
+  location.href='index.html';
+ };
 };
-
-$('myProfile').onclick=()=>showModal(`
-<h3>Мой профиль</h3>
-<div class="avatar" style="width:64px;height:64px;margin-bottom:12px">${esc(initials(me.name))}</div>
-<label>Имя</label>
-<input id="profileName" value="${esc(me.name)}">
-<label>О себе</label>
-<textarea id="profileBio">${esc(me.bio||'')}</textarea>
-<label>Ссылка на аватар (необязательно)</label>
-<input id="profileAvatar" value="${esc(me.avatar||'')}" placeholder="https://...">
-<div class="modal-actions">
-<button class="btn" id="logout">Выйти</button>
-<button class="btn" id="cancelProfile">Отмена</button>
-<button class="btn primary" id="saveProfile">Сохранить</button>
-</div>
-`);
-
-document.addEventListener('click',e=>{
-if(e.target.id==='cancelProfile')closeModal();
-
-if(e.target.id==='saveProfile'){
-let list=allUsers();
-let u=list.find(x=>x.id===me.id);
-
-u.name=$('profileName').value.trim()||u.name;
-u.bio=$('profileBio').value;
-u.avatar=$('profileAvatar').value.trim();
-
-localStorage.setItem(USERS,JSON.stringify(list));
-me.name=u.name;
-me.bio=u.bio;
-me.avatar=u.avatar;
-
-closeModal();
-renderChats();
-if(active)openChat(active);
-}
-
-if(e.target.id==='logout'){
-localStorage.removeItem(SESSION);
-location.href='index.html';
-}
-});
 
 async function startRecord(){
-if(!navigator.mediaDevices?.getUserMedia)
-return alert('Запись недоступна. Нужен HTTPS и доступ к микрофону.');
+ if(!active)return alert('Сначала открой чат.');
 
-try{
-let stream=await navigator.mediaDevices.getUserMedia({audio:true});
-parts=[];
-recorder=new MediaRecorder(stream);
+ if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){
+  return alert('Запись голосовых требует современный браузер и HTTPS (GitHub Pages подходит).');
+ }
 
-recorder.ondataavailable=e=>{
-if(e.data.size)parts.push(e.data);
-};
+ try{
+  let stream=await navigator.mediaDevices.getUserMedia({audio:true});
+  parts=[];
+  recorder=new MediaRecorder(stream);
 
-recorder.onstop=()=>{
-let blob=new Blob(parts,{type:recorder.mimeType||'audio/webm'});
-let reader=new FileReader();
+  recorder.ondataavailable=e=>{
+   if(e.data.size)parts.push(e.data);
+  };
 
-reader.onload=()=>{
-let c=getChat(active);
-c.messages.push({from:me.id,audio:reader.result,time:Date.now()});
-save();
-renderMessages();
-renderChats();
-};
+  recorder.onerror=e=>{
+   alert('Ошибка записи: '+e.error);
+  };
 
-reader.readAsDataURL(blob);
-stream.getTracks().forEach(t=>t.stop());
-};
+  recorder.onstop=()=>{
+   let blob=new Blob(parts,{type:recorder.mimeType||'audio/webm'});
 
-recorder.start();
-$('record').textContent='■ Стоп';
-recording=true;
+   if(blob.size>2*1024*1024){
+    alert('Голосовое больше 2 МБ. Запиши короче.');
+    stream.getTracks().forEach(t=>t.stop());
+    return;
+   }
 
-}catch(e){
-alert('Не удалось включить микрофон: '+e.message);
-}
+   let reader=new FileReader();
+
+   reader.onload=()=>{
+    getChat(active).messages.push({
+     from:me.id,
+     audio:reader.result,
+     time:Date.now()
+    });
+
+    save();
+    renderMessages();
+    renderChats();
+   };
+
+   reader.readAsDataURL(blob);
+   stream.getTracks().forEach(t=>t.stop());
+  };
+
+  recorder.start();
+  recording=true;
+  $('record').textContent='■';
+  $('record').title='Остановить запись';
+
+ }catch(e){
+  alert('Не удалось включить микрофон: '+e.message);
+ }
 }
 
 $('record').onclick=()=>{
-if(!recording){
-startRecord();
-}else{
-recorder?.stop();
-recording=false;
-$('record').textContent='🎙';
-}
+ if(!recording){
+  startRecord();
+ }else{
+  recorder?.stop();
+  recording=false;
+  $('record').textContent='🎙';
+  $('record').title='Записать голосовое';
+ }
 };
 
 function call(kind){
-showModal(`
-<div class="callbox">
-<h3>${kind==='video'?'Видеозвонок':'Голосовой звонок'}</h3>
-<div class="avatar">☎</div>
-<p>Демонстрационный экран звонка</p>
-<p style="color:#8793b4">Для настоящих звонков MERKS потребуется WebRTC и сервер сигнализации.</p>
-<button class="btn primary" id="endCall">Завершить</button>
-</div>
-`);
-$('endCall').onclick=closeModal;
+ showModal(`
+  <div class="callbox">
+   <h3>${kind==='video'?'Видеозвонок':'Голосовой звонок'}</h3>
+   <div class="avatar">☎</div>
+   <p>Демонстрационный экран звонка</p>
+   <p class="hint">Настоящие звонки требуют WebRTC и сервера сигнализации.</p>
+   <button class="btn primary" id="endCall">Завершить</button>
+  </div>
+ `);
+
+ $('endCall').onclick=closeModal;
 }
 
 $('voiceCall').onclick=()=>call('voice');
@@ -500,30 +638,30 @@ const cx=cv.getContext('2d');
 let stars=[];
 
 function resize(){
-cv.width=innerWidth*devicePixelRatio;
-cv.height=innerHeight*devicePixelRatio;
-cx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+ cv.width=innerWidth*devicePixelRatio;
+ cv.height=innerHeight*devicePixelRatio;
+ cx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
 
-stars=Array.from({length:100},()=>({
-x:Math.random()*innerWidth,
-y:Math.random()*innerHeight,
-r:Math.random()*1.2+.2,
-a:Math.random()*.6+.1
-}));
+ stars=Array.from({length:110},()=>({
+  x:Math.random()*innerWidth,
+  y:Math.random()*innerHeight,
+  r:Math.random()*1.3+.2,
+  a:Math.random()*.6+.1
+ }));
 }
 
 function paint(){
-cx.clearRect(0,0,innerWidth,innerHeight);
+ cx.clearRect(0,0,innerWidth,innerHeight);
 
-stars.forEach(s=>{
-cx.globalAlpha=s.a;
-cx.fillStyle='#dce4ff';
-cx.beginPath();
-cx.arc(s.x,s.y,s.r,0,7);
-cx.fill();
-});
+ stars.forEach(s=>{
+  cx.globalAlpha=s.a;
+  cx.fillStyle='#dce4ff';
+  cx.beginPath();
+  cx.arc(s.x,s.y,s.r,0,Math.PI*2);
+  cx.fill();
+ });
 
-requestAnimationFrame(paint);
+ requestAnimationFrame(paint);
 }
 
 addEventListener('resize',resize);
@@ -533,4 +671,3 @@ renderChats();
 </script>
 </body>
 </html>
-
