@@ -3,1050 +3,498 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#080c16">
-<title>MERKS — Твоя территория</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080910">
+<title>MERKS — Messenger</title>
 <style>
 :root{
- --bg:#080c16;
- --panel:#101827;
- --panel2:#18243a;
- --border:#28364d;
- --text:#f4f6fc;
- --muted:#8493ad;
- --accent:#648cff;
- --accent2:#9bb6ff;
- --bubble:#1b2940;
- --mine:#294b87;
- --danger:#ed6577;
- --success:#58c99b;
- --shadow:0 15px 50px #0005;
-}
-body.light{
- --bg:#eef1f7;
- --panel:#fff;
- --panel2:#e9eef7;
- --border:#dce2ed;
- --text:#172136;
- --muted:#66738b;
- --accent:#426bd3;
- --accent2:#315bbd;
- --bubble:#edf1f8;
- --mine:#d9e6ff;
- --shadow:0 15px 40px #253b6015;
+  --bg:#080910;--panel:#10121d;--panel2:#171a28;--border:#292d40;
+  --text:#f4f5ff;--muted:#9298ad;--accent:#8c75ff;--accent2:#5b48d6;
+  --bubble:#202438;--mine:#5143a4;--danger:#ff657d;
 }
 *{box-sizing:border-box}
-body{
- margin:0;background:var(--bg);color:var(--text);
- font-family:Arial,Helvetica,sans-serif;
- transition:background .25s,color .25s;
-}
-button,input,textarea,select{font:inherit}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif;min-height:100vh}
+button,input,textarea{font:inherit}
 button{cursor:pointer}
 .hidden{display:none!important}
-button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{
- outline:2px solid var(--accent);outline-offset:2px
+#stars{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+.screen{min-height:100vh}
+.center{display:flex;align-items:center;justify-content:center;padding:20px}
+.auth-card{width:min(430px,100%);background:#10121deF;border:1px solid var(--border);border-radius:24px;padding:30px;box-shadow:0 25px 90px #0009;backdrop-filter:blur(15px)}
+.brand{text-align:center;margin-bottom:24px}
+.raven{width:72px;height:72px;margin:auto auto 8px;display:block}
+.brand h1{letter-spacing:9px;margin:4px 0;font-size:28px}
+.brand p{color:var(--muted);font-size:13px}
+.field{margin:14px 0}
+.field label{display:block;color:var(--muted);font-size:12px;margin-bottom:7px}
+.field input,.field textarea,.search-input{
+  width:100%;padding:14px 15px;background:#090b13;border:1px solid var(--border);
+  border-radius:12px;color:var(--text);outline:none
 }
-#splash{
- position:fixed;inset:0;z-index:1000;
- display:flex;align-items:center;justify-content:center;
- flex-direction:column;overflow:hidden;
- background:radial-gradient(ellipse at 50% 45%,#1b3159,#080c16 70%);
- transition:opacity .7s,visibility .7s;
+.field input:focus,.field textarea:focus,.search-input:focus{border-color:var(--accent)}
+.primary,.secondary,.danger-btn{
+  border:0;border-radius:12px;padding:13px 17px;font-weight:700
 }
-#splash.done{opacity:0;visibility:hidden;pointer-events:none}
-#stars{position:absolute;inset:0;width:100%;height:100%}
-.splash-mark{width:125px;height:125px;z-index:2;animation:float 3s infinite}
-.splash-title{font-size:36px;font-weight:900;letter-spacing:12px;z-index:2;margin-top:15px}
-.splash-sub{font-size:10px;letter-spacing:5px;color:#9bb7f4;margin-top:12px;z-index:2}
-.splash-line{width:90px;height:2px;background:var(--accent);margin-top:28px;z-index:2;animation:load 2s infinite}
-@keyframes float{50%{transform:translateY(-10px)}}
-@keyframes load{0%{width:10px;opacity:.3}50%{width:100px;opacity:1}100%{width:10px;opacity:.3}}
-#auth{
- min-height:100dvh;display:flex;align-items:center;justify-content:center;
- padding:20px;background:radial-gradient(ellipse at top,#1c3154,var(--bg) 65%);
-}
-.auth-card{
- width:100%;max-width:410px;padding:28px;
- background:var(--panel);border:1px solid var(--border);
- border-radius:22px;box-shadow:var(--shadow);text-align:center;
-}
-.logo{width:86px;height:86px;margin:auto}
-.brand{font-size:30px;letter-spacing:9px;font-weight:900;margin:12px 0 4px}
-.subtitle{font-size:11px;color:var(--muted);letter-spacing:3px}
-.auth-tabs{display:flex;gap:8px;margin:25px 0 15px}
-.auth-tabs button{flex:1}
-.field{
- display:block;width:100%;padding:14px;margin:10px 0;
- color:var(--text);background:var(--panel2);
- border:1px solid var(--border);border-radius:11px;outline:none;
-}
-.field:focus{border-color:var(--accent)}
-.primary{
- border:0;background:var(--accent);color:white;
- border-radius:11px;padding:13px 17px;font-weight:700;
- transition:filter .2s,transform .2s;
-}
-.primary:hover{filter:brightness(1.13)}
-.primary:active{transform:scale(.98)}
-.secondary{
- border:1px solid var(--border);background:var(--panel2);
- color:var(--text);border-radius:11px;padding:12px;
-}
-.full{width:100%;margin-top:12px}
-.small{font-size:11px;color:var(--muted);line-height:1.6}
-.link-btn{border:0;background:none;color:var(--accent2);padding:8px}
-#app{
- display:flex;width:100%;height:100dvh;max-width:1550px;
- margin:auto;overflow:hidden;
-}
-.sidebar{
- width:340px;min-width:280px;display:flex;flex-direction:column;
- background:var(--panel);border-right:1px solid var(--border);
-}
-.topbar{
- min-height:72px;padding:15px 18px;display:flex;
- align-items:center;justify-content:space-between;
- border-bottom:1px solid var(--border);
-}
-.top-brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:4px;font-size:20px}
-.top-mark{width:36px;height:36px}
-.actions{display:flex;gap:7px}
-.icon-btn{
- min-width:39px;min-height:39px;border:1px solid var(--border);
- background:var(--panel2);color:var(--text);border-radius:10px;
-}
-.search-wrap{padding:12px}
-.search-wrap input{margin:0}
-.tabs{display:flex;padding:0 12px;gap:5px}
-.tab{
- flex:1;border:0;background:none;color:var(--muted);
- padding:12px 5px;border-bottom:2px solid transparent;
-}
-.tab.active{color:var(--accent);border-color:var(--accent)}
-.chat-list{overflow-y:auto;flex:1}
-.chat-item{
- display:flex;align-items:center;gap:12px;padding:14px;
- border-bottom:1px solid var(--border);cursor:pointer;
-}
-.chat-item:hover,.chat-item.selected{background:var(--panel2)}
-.avatar{
- width:45px;height:45px;min-width:45px;border-radius:50%;
- display:flex;align-items:center;justify-content:center;
- color:#fff;font-weight:bold;background:linear-gradient(140deg,#5b7bb8,#1b2945);
- overflow:hidden;
-}
+.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:white}
+.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--border)}
+.danger-btn{background:#542333;color:#ffb4c0}
+.full{width:100%}
+.auth-switch{text-align:center;color:var(--muted);font-size:13px;margin-top:18px}
+.link{color:#b7aaff;cursor:pointer}
+.error{color:#ff8294;font-size:12px;min-height:18px;margin-top:8px}
+.app{height:100vh;min-height:520px;display:flex;background:#090b13}
+.sidebar{width:350px;min-width:290px;background:#10121d;border-right:1px solid var(--border);display:flex;flex-direction:column}
+.side-head{padding:17px 17px 12px;border-bottom:1px solid var(--border)}
+.side-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:17px}
+.logo-mini{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:4px}
+.logo-mini svg{width:32px;height:32px}
+.icon-btn{width:38px;height:38px;border:1px solid var(--border);background:var(--panel2);color:var(--text);border-radius:12px}
+.icon-btn:hover,.secondary:hover{border-color:var(--accent)}
+.search-input{padding:12px 14px}
+.chat-list{overflow:auto;flex:1;padding:8px}
+.chat-item{display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;cursor:pointer}
+.chat-item:hover,.chat-item.active{background:#202337}
+.avatar{width:46px;height:46px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#7561d8,#252b55);font-weight:800;overflow:hidden}
 .avatar img{width:100%;height:100%;object-fit:cover}
-.chat-info{flex:1;min-width:0}
-.chat-name{font-size:14px;font-weight:bold;margin-bottom:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.chat-preview{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.chat-time{font-size:10px;color:var(--muted)}
-.profilebar{
- display:flex;align-items:center;gap:10px;padding:13px;
- border-top:1px solid var(--border);
-}
-.profilebar .chat-info{cursor:pointer}
-.main{flex:1;min-width:0;display:flex;flex-direction:column;position:relative}
-.welcome{
- flex:1;display:flex;flex-direction:column;align-items:center;
- justify-content:center;text-align:center;padding:25px;
-}
-.welcome-mark{width:120px;height:120px}
-.welcome h1{letter-spacing:9px;font-size:27px}
-.welcome p{color:var(--muted);line-height:1.7;max-width:330px}
-.connection{font-size:11px;color:var(--muted);margin-top:20px}
-.chat-screen{flex:1;min-height:0;display:flex;flex-direction:column}
-.chat-header{
- display:flex;align-items:center;gap:12px;padding:13px 17px;
- background:var(--panel);border-bottom:1px solid var(--border);
-}
-.chat-header .chat-info{flex:1}
-.messages{
- flex:1;overflow-y:auto;padding:20px;
- display:flex;flex-direction:column;gap:12px;
-}
-.message{
- max-width:min(78%,500px);align-self:flex-start;
- padding:11px 14px;background:var(--bubble);
- border-radius:14px 14px 14px 4px;overflow-wrap:anywhere;
- line-height:1.45;white-space:pre-wrap;
-}
-.message.mine{
- align-self:flex-end;background:var(--mine);
- border-radius:14px 14px 4px 14px;
-}
-.message-time{font-size:10px;color:var(--muted);text-align:right;margin-top:5px}
+.chat-info{min-width:0;flex:1}
+.chat-name{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-preview{font-size:12px;color:var(--muted);margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-time{font-size:10px;color:var(--muted);align-self:flex-start}
+.side-bottom{padding:12px;border-top:1px solid var(--border);display:flex;gap:8px}
+.side-bottom button{flex:1}
+.main{flex:1;display:flex;flex-direction:column;min-width:0;position:relative}
+.welcome{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--muted);padding:20px}
+.welcome .raven{width:110px;height:110px;opacity:.8}
+.conversation{height:100%;display:flex;flex-direction:column;min-height:0}
+.chat-header{height:72px;padding:10px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:#10121deF}
+.header-info{flex:1;min-width:0}
+.header-info strong{display:block}
+.header-info small{color:var(--muted)}
+.header-actions{display:flex;gap:7px}
+.messages{flex:1;overflow:auto;padding:22px clamp(12px,5vw,70px);display:flex;flex-direction:column;gap:10px}
+.message{max-width:min(72%,560px);padding:11px 14px;border-radius:16px;background:var(--bubble);align-self:flex-start;overflow-wrap:anywhere}
+.message.mine{background:var(--mine);align-self:flex-end;border-bottom-right-radius:5px}
+.message small{display:block;text-align:right;color:#d0c9ff;font-size:10px;margin-top:6px}
 .message audio{max-width:100%;width:230px}
-.composer{
- display:flex;align-items:flex-end;gap:8px;padding:12px;
- background:var(--panel);border-top:1px solid var(--border);
-}
-.composer textarea{
- flex:1;min-width:0;resize:none;min-height:43px;max-height:120px;
- padding:12px;background:var(--panel2);color:var(--text);
- border:1px solid var(--border);border-radius:12px;outline:none;
-}
-.emoji-panel{
- position:absolute;bottom:78px;left:15px;z-index:20;
- padding:12px;background:var(--panel);border:1px solid var(--border);
- border-radius:14px;box-shadow:var(--shadow);
- display:grid;grid-template-columns:repeat(6,1fr);gap:9px;
-}
-.emoji-panel button{border:0;background:none;font-size:23px;padding:2px}
-.settings{width:100%;max-width:760px;padding:24px;overflow-y:auto}
-.settings h2{margin-top:0}
-.setting-card{
- padding:17px;margin:13px 0;background:var(--panel);
- border:1px solid var(--border);border-radius:15px;
-}
-.setting-card h3{font-size:14px;margin:0 0 12px}
-.setting-row{
- display:flex;align-items:center;justify-content:space-between;
- gap:12px;padding:12px 0;border-bottom:1px solid var(--border);
- font-size:13px;
-}
-.setting-row:last-child{border:0}
-.setting-row select,.setting-row input[type=text]{
- padding:9px;background:var(--panel2);color:var(--text);
- border:1px solid var(--border);border-radius:8px;
-}
-.setting-row input[type=checkbox]{width:19px;height:19px;accent-color:var(--accent)}
-.setting-row input[type=file]{max-width:190px;font-size:11px}
-.danger{color:var(--danger)}
-.status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--success);margin-right:5px}
-#toast{
- position:fixed;z-index:2000;bottom:22px;left:50%;
- transform:translateX(-50%);padding:12px 18px;
- background:#253c63;color:white;border-radius:11px;
- box-shadow:var(--shadow);font-size:13px;max-width:90%;
- text-align:center;
-}
+.composer{padding:13px 18px;border-top:1px solid var(--border);display:flex;gap:9px;align-items:center;background:#10121d}
+.composer input{flex:1;min-width:0;background:#090b13;border:1px solid var(--border);border-radius:14px;padding:14px;color:white;outline:none}
+.send-btn{height:46px;min-width:48px}
+.recording{color:#ff7188;font-size:12px;align-self:center}
+.modal-bg{position:fixed;inset:0;background:#000a;display:flex;align-items:center;justify-content:center;padding:18px;z-index:20}
+.modal{width:min(440px,100%);max-height:90vh;overflow:auto;background:#111421;border:1px solid var(--border);border-radius:20px;padding:22px;box-shadow:0 20px 80px #0009}
+.modal h2{margin:0 0 18px}
+.modal-actions{display:flex;gap:9px;margin-top:18px}
+.modal-actions>*{flex:1}
+.profile-avatar{width:90px;height:90px;margin:0 auto 15px}
+.profile-center{text-align:center}
+.profile-center h2{margin:5px 0}
+.muted{color:var(--muted);font-size:13px}
+.user-result{display:flex;align-items:center;gap:12px;padding:12px;border-bottom:1px solid var(--border)}
+.user-result .grow{flex:1;min-width:0}
 .mobile-back{display:none}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#25283b;border:1px solid var(--border);padding:12px 18px;border-radius:12px;z-index:40;font-size:13px;box-shadow:0 10px 40px #0008}
 @media(max-width:720px){
- .sidebar{width:100%;min-width:0;border:0}
+ .sidebar{width:100%;min-width:0}
  .main{display:none}
- #app.open-chat .sidebar{display:none}
- #app.open-chat .main{display:flex}
- .mobile-back{display:block}
- .settings{padding:17px}
- .message{max-width:90%}
- .topbar{min-height:64px}
+ .app.chat-open .sidebar{display:none}
+ .app.chat-open .main{display:flex;width:100%}
+ .mobile-back{display:inline-grid}
+ .chat-header{padding:8px 10px}
+ .messages{padding:16px 12px}
+ .message{max-width:85%}
+ .header-actions .icon-btn{width:34px;height:34px}
 }
 </style>
 </head>
-
 <body>
+<canvas id="stars"></canvas>
 
-<!-- ЗАСТАВКА -->
-<div id="splash">
- <canvas id="stars"></canvas>
- <svg class="splash-mark" viewBox="0 0 160 160">
-  <path fill="#fff" d="M12 84 L49 68 L28 37 L70 57 L92 12 L101 53 L147 37 L121 76 L155 91 L113 100 L131 142 L89 115 L63 153 L66 110 L16 125 L49 92 Z"/>
-  <path fill="#080c16" d="M45 82 L105 66 L145 42 L119 87 L144 96 L91 103 L70 137 L76 101 Z"/>
-  <path fill="#fff" d="M75 77 L114 66 L94 87 L70 91 Z"/>
-  <path fill="#080c16" d="M91 77 L103 74 L96 83 Z"/>
- </svg>
- <div class="splash-title">MERKS</div>
- <div class="splash-sub">ТВОЯ ТЕРРИТОРИЯ</div>
- <div class="splash-line"></div>
-</div>
+<!-- ЛОГОТИП -->
+<svg width="0" height="0" style="position:absolute">
+<symbol id="raven-symbol" viewBox="0 0 100 100">
+ <path fill="white" d="M8 15 42 34 57 8 60 34 94 19 73 48 96 54 65 63 84 88 53 72 39 96 39 67 8 79 29 55 5 43 37 44Z"/>
+ <path fill="#080910" d="M57 43 91 24 69 49 88 55 60 59Z"/>
+ <circle cx="61" cy="43" r="2.7" fill="#080910"/>
+</symbol>
+</svg>
 
-<!-- АВТОРИЗАЦИЯ -->
-<section id="auth">
+<!-- РЕГИСТРАЦИЯ И ВХОД -->
+<section id="authScreen" class="screen center">
  <div class="auth-card">
-  <svg class="logo" viewBox="0 0 160 160">
-   <path fill="#fff" d="M12 84 L49 68 L28 37 L70 57 L92 12 L101 53 L147 37 L121 76 L155 91 L113 100 L131 142 L89 115 L63 153 L66 110 L16 125 L49 92 Z"/>
-   <path fill="#101827" d="M45 82 L105 66 L145 42 L119 87 L144 96 L91 103 L70 137 L76 101 Z"/>
-   <path fill="#fff" d="M75 77 L114 66 L94 87 L70 91 Z"/>
-   <path fill="#101827" d="M91 77 L103 74 L96 83 Z"/>
-  </svg>
-  <div class="brand">MERKS</div>
-  <p class="subtitle">ТВОЯ СВЯЗЬ. ТВОИ ПРАВИЛА.</p>
-
-  <div class="auth-tabs">
-   <button class="primary" id="registerTab" onclick="setAuthMode('register')">Регистрация</button>
-   <button class="secondary" id="loginTab" onclick="setAuthMode('login')">Вход</button>
+  <div class="brand">
+   <svg class="raven"><use href="#raven-symbol"/></svg>
+   <h1>MERKS</h1>
+   <p>Твоя связь. Твои правила.</p>
   </div>
-
-  <div id="registerFields">
-   <input class="field" id="authName" placeholder="Имя профиля" maxlength="30" autocomplete="nickname">
-   <input class="field" id="authPhone" type="tel" placeholder="+380 XX XXX XX XX" autocomplete="tel">
-   <input class="field" id="authPassword" type="password" placeholder="Пароль (от 8 символов)" autocomplete="new-password">
-   <input class="field" id="authPassword2" type="password" placeholder="Повтори пароль" autocomplete="new-password">
+  <div id="loginForm">
+   <h2>С возвращением</h2>
+   <div class="field"><label>Номер телефона</label><input id="loginPhone" placeholder="+380..." autocomplete="tel"></div>
+   <div class="field"><label>Пароль</label><input id="loginPassword" type="password" placeholder="Твой пароль"></div>
+   <div id="loginError" class="error"></div>
+   <button class="primary full" onclick="login()">Войти в MERKS</button>
+   <div class="auth-switch">Нет аккаунта? <span class="link" onclick="showRegister()">Создать аккаунт</span></div>
   </div>
-
-  <div id="loginFields" class="hidden">
-   <input class="field" id="loginPhone" type="tel" placeholder="Номер телефона" autocomplete="tel">
-   <input class="field" id="loginPassword" type="password" placeholder="Пароль" autocomplete="current-password">
+  <div id="registerForm" class="hidden">
+   <h2>Создать аккаунт</h2>
+   <div class="field"><label>Имя профиля</label><input id="regName" placeholder="Как тебя называть"></div>
+   <div class="field"><label>Номер телефона</label><input id="regPhone" placeholder="+380..." autocomplete="tel"></div>
+   <div class="field"><label>Пароль</label><input id="regPassword" type="password" placeholder="Минимум 6 символов"></div>
+   <div class="field"><label>Повтори пароль</label><input id="regPassword2" type="password" placeholder="Повтори пароль"></div>
+   <div class="field"><label>Код подтверждения (демо)</label><input id="regCode" placeholder="Введи 1234"></div>
+   <div id="registerError" class="error"></div>
+   <button class="primary full" onclick="register()">Зарегистрироваться</button>
+   <div class="auth-switch">Уже есть аккаунт? <span class="link" onclick="showLogin()">Войти</span></div>
   </div>
-
-  <div id="codeBox" class="hidden">
-   <input class="field" id="authCode" placeholder="Код подтверждения">
-   <p class="small">Демонстрационный код: 1234. Реальная SMS-проверка не подключена.</p>
-  </div>
-
-  <button id="authButton" class="primary full" onclick="submitAuth()">СОЗДАТЬ АККАУНТ</button>
-  <p class="small">MERKS BETA 0.2 · ЛОКАЛЬНАЯ ВЕРСИЯ</p>
  </div>
 </section>
 
 <!-- ПРИЛОЖЕНИЕ -->
-<div id="app" class="hidden">
- <aside class="sidebar">
-  <div class="topbar">
-   <div class="top-brand">
-    <svg class="top-mark" viewBox="0 0 160 160">
-     <path fill="#fff" d="M12 84 L49 68 L28 37 L70 57 L92 12 L101 53 L147 37 L121 76 L155 91 L113 100 L131 142 L89 115 L63 153 L66 110 L16 125 L49 92 Z"/>
-     <path fill="#101827" d="M45 82 L105 66 L145 42 L119 87 L144 96 L91 103 L70 137 L76 101 Z"/>
-     <path fill="#fff" d="M75 77 L114 66 L94 87 L70 91 Z"/>
-    </svg>
-    MERKS
-   </div>
-   <div class="actions">
-    <button class="icon-btn" onclick="showSettings()" title="Настройки">⚙</button>
-    <button class="icon-btn" onclick="newChat()" title="Новая переписка">＋</button>
-   </div>
-  </div>
-
-  <div class="search-wrap">
-   <input id="search" class="field" placeholder="Поиск переписок..." oninput="renderChats()">
-  </div>
-
-  <div class="tabs">
-   <button class="tab active" id="tabAll" onclick="setTab('all',this)">Все</button>
-   <button class="tab" id="tabUnread" onclick="setTab('unread',this)">Новые</button>
-  </div>
-
-  <div class="chat-list" id="chatList"></div>
-
-  <div class="profilebar">
-   <div class="avatar" id="myAvatar">М</div>
-   <div class="chat-info" onclick="showSettings()">
-    <div class="chat-name" id="myName">Профиль</div>
-    <div class="chat-preview">Мой профиль и настройки</div>
-   </div>
-   <button class="icon-btn" onclick="logout()">↪</button>
-  </div>
- </aside>
-
- <main class="main">
-  <section id="welcome" class="welcome">
-   <svg class="welcome-mark" viewBox="0 0 160 160">
-    <path fill="#fff" d="M12 84 L49 68 L28 37 L70 57 L92 12 L101 53 L147 37 L121 76 L155 91 L113 100 L131 142 L89 115 L63 153 L66 110 L16 125 L49 92 Z"/>
-    <path fill="#101827" d="M45 82 L105 66 L145 42 L119 87 L144 96 L91 103 L70 137 L76 101 Z"/>
-    <path fill="#fff" d="M75 77 L114 66 L94 87 L70 91 Z"/>
-   </svg>
-   <h1>MERKS</h1>
-   <p>Твоя территория общения. Выбирай переписку или создавай новую.</p>
-   <button class="primary" onclick="newChat()">＋ Новая переписка</button>
-   <div class="connection" id="connectionStatus">Локальный режим</div>
-  </section>
-
-  <section id="chatScreen" class="chat-screen hidden">
-   <div class="chat-header">
-    <button class="icon-btn mobile-back" onclick="closeChat()">←</button>
-    <div class="avatar" id="chatAvatar">М</div>
-    <div class="chat-info">
-     <div class="chat-name" id="chatTitle"></div>
-     <div class="chat-preview" id="chatSubtitle">Личная переписка</div>
+<section id="appScreen" class="screen hidden">
+ <div class="app" id="appLayout">
+  <aside class="sidebar">
+   <div class="side-head">
+    <div class="side-top">
+     <div class="logo-mini"><svg><use href="#raven-symbol"/></svg> MERKS</div>
+     <button class="icon-btn" title="Создать группу" onclick="openGroupModal()">＋</button>
     </div>
-    <button class="icon-btn" onclick="chatOptions()">⋯</button>
+    <input class="search-input" id="chatSearch" placeholder="Поиск чатов..." oninput="renderChats()">
    </div>
-
-   <div class="messages" id="messages"></div>
-
-   <div class="composer">
-    <button class="icon-btn" onclick="toggleEmoji()">☺</button>
-    <textarea id="messageInput" rows="1" placeholder="Написать сообщение..." onkeydown="handleEnter(event)"></textarea>
-    <button class="icon-btn" id="recordButton" onclick="recordVoice()">🎙</button>
-    <button class="primary" onclick="sendMessage()">➤</button>
+   <div class="chat-list" id="chatList"></div>
+   <div class="side-bottom">
+    <button class="secondary" onclick="openSearch()">⌕ Поиск людей</button>
+    <button class="secondary" onclick="openProfile()">Профиль</button>
    </div>
-   <div id="emojiPanel" class="emoji-panel hidden"></div>
-  </section>
+  </aside>
 
-  <section id="settingsScreen" class="settings hidden">
-   <button class="secondary" onclick="backFromSettings()">← Назад</button>
-   <h2>Настройки MERKS</h2>
-
-   <div class="setting-card">
-    <h3>👤 МОЙ ПРОФИЛЬ</h3>
-    <div class="setting-row">
-     <span>Имя профиля</span>
-     <input id="profileName" type="text" maxlength="30">
-    </div>
-    <div class="setting-row">
-     <span>Номер телефона</span>
-     <span id="profilePhone"></span>
-    </div>
-    <div class="setting-row">
-     <span>Аватар</span>
-     <input id="avatarFile" type="file" accept="image/*" onchange="changeAvatar(event)">
-    </div>
-    <button class="primary full" onclick="saveProfile()">Сохранить профиль</button>
+  <main class="main">
+   <div class="welcome" id="welcome">
+    <div><svg class="raven"><use href="#raven-symbol"/></svg><h2>Добро пожаловать в MERKS</h2><p>Выбери чат или найди собеседника</p></div>
    </div>
-
-   <div class="setting-card">
-    <h3>🎨 ОФОРМЛЕНИЕ</h3>
-    <div class="setting-row">
-     <span>Тема</span>
-     <select id="themeSelect" onchange="changeTheme(this.value)">
-      <option value="dark">Тёмная</option>
-      <option value="light">Светлая</option>
-      <option value="system">Системная</option>
-     </select>
-    </div>
-    <div class="setting-row">
-     <span>Звёздная заставка</span>
-     <input id="starsToggle" type="checkbox" onchange="saveSettings()">
+   <div class="conversation hidden" id="conversation">
+    <header class="chat-header">
+     <button class="icon-btn mobile-back" onclick="closeMobileChat()">‹</button>
+     <div class="avatar" id="headerAvatar">M</div>
+     <div class="header-info"><strong id="headerName">Чат</strong><small id="headerStatus">MERKS</small></div>
+     <div class="header-actions">
+      <button class="icon-btn" title="Голосовой звонок" onclick="startCall('audio')">☎</button>
+      <button class="icon-btn" title="Видеозвонок" onclick="startCall('video')">▣</button>
+      <button class="icon-btn" title="Профиль" onclick="openCurrentChatProfile()">ⓘ</button>
+     </div>
+    </header>
+    <div class="messages" id="messages"></div>
+    <div class="composer">
+     <button class="icon-btn" title="Эмодзи" onclick="addEmoji()">☺</button>
+     <input id="messageInput" placeholder="Написать сообщение..." onkeydown="if(event.key==='Enter')sendMessage()">
+     <span id="recordingLabel" class="recording hidden">● Запись...</span>
+     <button class="icon-btn" id="voiceButton" title="Записать голосовое" onclick="toggleRecording()">🎙</button>
+     <button class="primary send-btn" onclick="sendMessage()">➤</button>
     </div>
    </div>
+  </main>
+ </div>
+</section>
 
-   <div class="setting-card">
-    <h3>🌐 ЯЗЫК</h3>
-    <div class="setting-row">
-     <span>Язык интерфейса</span>
-     <select id="languageSelect" onchange="changeLanguage(this.value)">
-      <option value="ru">Русский</option>
-      <option value="uk">Українська</option>
-      <option value="en">English</option>
-     </select>
-    </div>
-   </div>
-
-   <div class="setting-card">
-    <h3>🔔 УВЕДОМЛЕНИЯ</h3>
-    <div class="setting-row">
-     <span>Звуковые сигналы</span>
-     <input id="soundToggle" type="checkbox" onchange="saveSettings()">
-    </div>
-    <div class="setting-row">
-     <span>Уведомления браузера</span>
-     <button class="secondary" onclick="enableNotifications()">Разрешить</button>
-    </div>
-   </div>
-
-   <div class="setting-card">
-    <h3>📡 ПОДКЛЮЧЕНИЕ</h3>
-    <div class="setting-row">
-     <span>Интернет</span>
-     <span id="networkText">Проверка...</span>
-    </div>
-    <p class="small">Переписки хранятся локально. Без интернета можно читать историю и создавать сообщения. Реальная доставка другим пользователям требует серверного подключения.</p>
-   </div>
-
-   <div class="setting-card">
-    <h3>ℹ️ О MERKS</h3>
-    <div class="setting-row"><span>Версия</span><span>0.2 BETA</span></div>
-    <div class="setting-row"><span>Разработчик</span><span>MERKS TEAM</span></div>
-    <div class="setting-row"><span>Лицензия</span><span>Тестовая сборка</span></div>
-   </div>
-
-   <button class="secondary danger full" onclick="logout()">Выйти из аккаунта</button>
-   <button class="secondary danger full" onclick="deleteAccount()">Удалить локальный аккаунт</button>
-  </section>
- </main>
+<!-- МОДАЛЬНОЕ ОКНО -->
+<div id="modalBg" class="modal-bg hidden" onclick="if(event.target===this)closeModal()">
+ <div class="modal" id="modalContent"></div>
 </div>
-
-<div id="toast" class="hidden"></div>
+<div id="toast" class="toast hidden"></div>
 
 <script>
-"use strict";
-
-const $=id=>document.getElementById(id);
-const DB="merks_beta_data";
-const ACCOUNTS="merks_accounts";
-let data=null;
-let activeChat=null;
-let currentTab="all";
-let authMode="register";
-let pendingAuth=false;
-let recorder=null;
-let recordingStream=null;
-let chunks=[];
-let recording=false;
-let avatarURL=null;
-
-const words={
- ru:{
-  all:"Все",unread:"Новые",search:"Поиск переписок...",
-  message:"Написать сообщение...",empty:"Пока нет переписок",
-  sent:"Сообщение сохранено на устройстве",
-  saved:"Настройки сохранены",online:"Интернет доступен",
-  offline:"Нет интернета"
- },
- uk:{
-  all:"Усі",unread:"Нові",search:"Пошук листувань...",
-  message:"Написати повідомлення...",empty:"Поки немає листувань",
-  sent:"Повідомлення збережено на пристрої",
-  saved:"Налаштування збережено",online:"Інтернет доступний",
-  offline:"Немає інтернету"
- },
- en:{
-  all:"All",unread:"New",search:"Search conversations...",
-  message:"Write a message...",empty:"No conversations yet",
-  sent:"Message saved on this device",
-  saved:"Settings saved",online:"Internet available",
-  offline:"Offline"
+/* ЗВЁЗДНЫЙ ФОН */
+const canvas=document.getElementById('stars'),ctx=canvas.getContext('2d');
+let stars=[];
+function resizeStars(){
+ canvas.width=innerWidth*devicePixelRatio;
+ canvas.height=innerHeight*devicePixelRatio;
+ ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+ stars=Array.from({length:150},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*1.5+.3,a:Math.random(),s:Math.random()*.012+.002}));
+}
+function animateStars(){
+ ctx.clearRect(0,0,innerWidth,innerHeight);
+ for(const s of stars){
+  s.a+=s.s;if(s.a>1||s.a<.15)s.s*=-1;
+  ctx.globalAlpha=s.a;ctx.fillStyle='white';ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();
  }
-};
+ ctx.globalAlpha=1;requestAnimationFrame(animateStars);
+}
+addEventListener('resize',resizeStars);resizeStars();animateStars();
 
-function getAccounts(){
- try{return JSON.parse(localStorage.getItem(ACCOUNTS)||"[]")}
- catch{return []}
+/* ДАННЫЕ */
+const ACCOUNTS_KEY='merks_accounts';
+const SESSION_KEY='merks_current';
+const CHATS_KEY='merks_chats';
+let currentUser=null,currentChatId=null,recorder=null,recordedChunks=[];
+let accounts=read(ACCOUNTS_KEY,[]);
+let chats=read(CHATS_KEY,[]);
+
+function read(key,fallback){
+ try{return JSON.parse(localStorage.getItem(key))||fallback}catch(e){return fallback}
 }
-function storeAccounts(accounts){
- localStorage.setItem(ACCOUNTS,JSON.stringify(accounts));
+function saveAll(){
+ localStorage.setItem(ACCOUNTS_KEY,JSON.stringify(accounts));
+ localStorage.setItem(CHATS_KEY,JSON.stringify(chats));
 }
+function safe(text){
+ return String(text??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function makeId(){return 'm'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function avatarText(name){return (name||'M').trim().charAt(0).toUpperCase()}
+function timeText(t){return new Date(t).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}
 function toast(text){
- const el=$("toast");
- el.textContent=text;
- el.classList.remove("hidden");
- clearTimeout(toast.timer);
- toast.timer=setTimeout(()=>el.classList.add("hidden"),2800);
+ const el=document.getElementById('toast');el.textContent=text;el.classList.remove('hidden');
+ clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>el.classList.add('hidden'),2600);
 }
-function initial(name){
- return (name||"?").trim().charAt(0).toUpperCase();
+
+/* АВТОРИЗАЦИЯ */
+function showRegister(){
+ loginForm.classList.add('hidden');registerForm.classList.remove('hidden');
 }
-function timeNow(){
- return new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
-}
-function dateNow(){
- return new Date().toISOString();
-}
-function currentWords(){
- return words[data?.settings?.language]||words.ru;
+function showLogin(){
+ registerForm.classList.add('hidden');loginForm.classList.remove('hidden');
 }
 async function hashPassword(password){
  const bytes=new TextEncoder().encode(password);
- const hash=await crypto.subtle.digest("SHA-256",bytes);
- return Array.from(new Uint8Array(hash))
-  .map(b=>b.toString(16).padStart(2,"0")).join("");
+ const hash=await crypto.subtle.digest('SHA-256',bytes);
+ return Array.from(new Uint8Array(hash)).map(x=>x.toString(16).padStart(2,'0')).join('');
 }
-function normalizePhone(phone){
- return phone.replace(/[^\d+]/g,"");
+async function register(){
+ const name=regName.value.trim(),phone=regPhone.value.trim();
+ const pass=regPassword.value,pass2=regPassword2.value,code=regCode.value.trim();
+ registerError.textContent='';
+ if(!name||!phone||!pass){registerError.textContent='Заполни все поля.';return}
+ if(pass.length<6){registerError.textContent='Пароль должен содержать минимум 6 символов.';return}
+ if(pass!==pass2){registerError.textContent='Пароли не совпадают.';return}
+ if(code!=='1234'){registerError.textContent='Для демо введи код 1234.';return}
+ if(accounts.some(a=>a.phone===phone)){registerError.textContent='Этот номер уже зарегистрирован в этом браузере.';return}
+ const user={id:makeId(),name,phone,password:await hashPassword(pass),bio:'Пользователь MERKS',avatar:'',created:Date.now()};
+ accounts.push(user);saveAll();enterApp(user);
 }
-
-function setAuthMode(mode){
- authMode=mode;
- pendingAuth=false;
- $("registerFields").classList.toggle("hidden",mode!=="register");
- $("loginFields").classList.toggle("hidden",mode!=="login");
- $("codeBox").classList.add("hidden");
- $("registerTab").className=mode==="register"?"primary":"secondary";
- $("loginTab").className=mode==="login"?"primary":"secondary";
- $("authButton").textContent=mode==="register"?"СОЗДАТЬ АККАУНТ":"ВОЙТИ";
- $("authSubtitle").textContent=mode==="register"?"СОЗДАЙ СВОЙ ПРОФИЛЬ":"С РАДОСТЬЮ ВИДИМ ТЕБЯ СНОВА";
-}
-
-async function submitAuth(){
- if(authMode==="login"){await login();return}
- if(!pendingAuth){await beginRegistration();return}
- await finishRegistration();
-}
-
-async function beginRegistration(){
- const name=$("authName").value.trim();
- const phone=normalizePhone($("authPhone").value);
- const password=$("authPassword").value;
- const password2=$("authPassword2").value;
-
- if(name.length<2){toast("Имя должно содержать минимум 2 символа");return}
- if(phone.replace(/\D/g,"").length<10){toast("Проверь номер телефона");return}
- if(password.length<8){toast("Пароль должен содержать минимум 8 символов");return}
- if(password!==password2){toast("Пароли не совпадают");return}
-
- if(getAccounts().some(a=>a.phone===phone)){
-  toast("Этот номер уже зарегистрирован. Войди в аккаунт.");
-  return;
- }
-
- $("codeBox").classList.remove("hidden");
- $("authSubtitle").textContent="ПОДТВЕРДИ РЕГИСТРАЦИЮ";
- $("authButton").textContent="ПОДТВЕРДИТЬ";
- pendingAuth=true;
- toast("Демонстрационный код: 1234");
-}
-
-async function finishRegistration(){
- if($("authCode").value.trim()!=="1234"){
-  toast("Неверный код");return;
- }
- const phone=normalizePhone($("authPhone").value);
- const accounts=getAccounts();
- if(accounts.some(a=>a.phone===phone)){
-  toast("Этот номер уже зарегистрирован");return;
- }
- const passwordHash=await hashPassword($("authPassword").value);
- const account={
-  name:$("authName").value.trim(),
-  phone,
-  passwordHash,
-  chats:[],
-  avatar:null,
-  settings:{
-   theme:"dark",language:"ru",stars:true,sound:false
-  }
- };
- accounts.push(account);
- storeAccounts(accounts);
- pendingAuth=false;
- openAccount(account);
-}
-
 async function login(){
- const phone=normalizePhone($("loginPhone").value);
- const password=$("loginPassword").value;
- if(!phone||!password){toast("Введи номер телефона и пароль");return}
- const accounts=getAccounts();
- const account=accounts.find(a=>a.phone===phone);
- if(!account){toast("Аккаунт не найден");return}
- const hash=await hashPassword(password);
- if(hash!==account.passwordHash){
-  toast("Неверный пароль");return;
- }
- openAccount(account);
+ const phone=loginPhone.value.trim(),pass=loginPassword.value;
+ loginError.textContent='';
+ const user=accounts.find(a=>a.phone===phone);
+ if(!user||user.password!==await hashPassword(pass)){loginError.textContent='Неверный номер или пароль.';return}
+ enterApp(user);
 }
-
-function openAccount(account){
- data={
-  user:{name:account.name,phone:account.phone,avatar:account.avatar||null},
-  chats:account.chats||[],
-  settings:account.settings||{
-   theme:"dark",language:"ru",stars:true,sound:false
-  }
- };
- localStorage.setItem("merks_current",account.phone);
- localStorage.setItem(DB,JSON.stringify(data));
- startApp();
-}
-
-function save(){
- if(!data)return;
- localStorage.setItem(DB,JSON.stringify(data));
- const accounts=getAccounts();
- const i=accounts.findIndex(a=>a.phone===data.user.phone);
- if(i!==-1){
-  accounts[i].name=data.user.name;
-  accounts[i].avatar=data.user.avatar;
-  accounts[i].chats=data.chats;
-  accounts[i].settings=data.settings;
-  storeAccounts(accounts);
- }
-}
-
-function startApp(){
- $("auth").classList.add("hidden");
- $("app").classList.remove("hidden");
- $("myName").textContent=data.user.name;
- setAvatar($("myAvatar"),data.user);
- applySettings();
- applyLanguage();
+function enterApp(user){
+ currentUser=user;
+ localStorage.setItem(SESSION_KEY,user.id);
+ appScreen.classList.remove('hidden');authScreen.classList.add('hidden');
+ chats=read(CHATS_KEY,[]);
  renderChats();
- updateNetwork();
+ showEmpty();
 }
-
-function setAvatar(element,user){
- element.innerHTML="";
- if(user.avatar){
-  const img=document.createElement("img");
-  img.src=user.avatar;
-  img.alt="Аватар";
-  element.appendChild(img);
- }else{
-  element.textContent=initial(user.name);
- }
-}
-
 function logout(){
- if(!confirm("Выйти из аккаунта?"))return;
- localStorage.removeItem("merks_current");
- data=null;activeChat=null;
- $("app").classList.add("hidden");
- $("auth").classList.remove("hidden");
- $("loginPassword").value="";
- $("loginPhone").value="";
- setAuthMode("login");
+ localStorage.removeItem(SESSION_KEY);currentUser=null;currentChatId=null;
+ appScreen.classList.add('hidden');authScreen.classList.remove('hidden');
+ showLogin();
 }
-
-function deleteAccount(){
- if(!confirm("Удалить аккаунт и все его локальные переписки? Это действие нельзя отменить."))return;
- const accounts=getAccounts().filter(a=>a.phone!==data.user.phone);
- storeAccounts(accounts);
- localStorage.removeItem("merks_current");
- localStorage.removeItem(DB);
- data=null;activeChat=null;
- $("app").classList.add("hidden");
- $("auth").classList.remove("hidden");
- setAuthMode("register");
- toast("Локальный аккаунт удалён");
+function showEmpty(){
+ welcome.classList.remove('hidden');conversation.classList.add('hidden');
 }
-
-function newChat(){
- const name=prompt("Имя собеседника:");
- if(!name||!name.trim())return;
- const chat={
-  id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),
-  name:name.trim(),messages:[],unread:0
- };
- data.chats.unshift(chat);
- save();renderChats();openChat(chat.id);
-}
-
-function renderChats(){
- const list=$("chatList");
- const q=$("search").value.toLowerCase();
- list.innerHTML="";
- let chats=data.chats.filter(c=>c.name.toLowerCase().includes(q));
- if(currentTab==="unread")chats=chats.filter(c=>c.unread>0);
- if(!chats.length){
-  const empty=document.createElement("div");
-  empty.style.cssText="padding:25px;text-align:center;color:var(--muted)";
-  empty.textContent=currentWords().empty;
-  list.appendChild(empty);return;
+function init(){
+ const id=localStorage.getItem(SESSION_KEY);
+ if(id){
+  const user=accounts.find(a=>a.id===id);
+  if(user){enterApp(user);return}
  }
- chats.forEach(chat=>{
-  const last=chat.messages[chat.messages.length-1];
-  const item=document.createElement("div");
-  item.className="chat-item"+(activeChat===chat.id?" selected":"");
-  const avatar=document.createElement("div");
-  avatar.className="avatar";
-  avatar.textContent=initial(chat.name);
-  const info=document.createElement("div");
-  info.className="chat-info";
-  const name=document.createElement("div");
-  name.className="chat-name";name.textContent=chat.name;
-  const preview=document.createElement("div");
-  preview.className="chat-preview";
-  preview.textContent=last?(last.type==="audio"?"🎙 Голосовое сообщение":last.text):"Начните общение";
-  const time=document.createElement("div");
-  time.className="chat-time";time.textContent=last?.time||"";
-  info.append(name,preview);
-  item.append(avatar,info,time);
-  item.onclick=()=>openChat(chat.id);
-  list.appendChild(item);
- });
 }
+init();
 
+/* ЧАТЫ */
+function userChats(){
+ return chats.filter(c=>c.members?.includes(currentUser.id));
+}
+function getChat(id){return chats.find(c=>c.id===id)}
+function otherMember(chat){
+ return accounts.find(a=>a.id===chat.members.find(id=>id!==currentUser.id));
+}
+function chatTitle(chat){
+ if(chat.type==='group')return chat.name;
+ const other=otherMember(chat);return other?.name||'Неизвестный пользователь';
+}
+function lastMessage(chat){return chat.messages?.[chat.messages.length-1]}
+function renderChats(){
+ if(!currentUser)return;
+ const query=chatSearch.value.toLowerCase().trim();
+ const list=userChats().filter(c=>{
+  const name=chatTitle(c).toLowerCase();
+  const last=(lastMessage(c)?.text||'').toLowerCase();
+  return name.includes(query)||last.includes(query);
+ }).sort((a,b)=>(lastMessage(b)?.time||b.created)-(lastMessage(a)?.time||a.created));
+ chatList.innerHTML=list.map(c=>{
+  const last=lastMessage(c);
+  const preview=last?(last.type==='audio'?'🎙 Голосовое сообщение':last.text):'Начните общение';
+  const avatar=c.type==='group'?'👥':avatarText(chatTitle(c));
+  return `<div class="chat-item ${c.id===currentChatId?'active':''}" onclick="openChat('${c.id}')">
+   <div class="avatar">${avatar}</div><div class="chat-info">
+   <div class="chat-name">${safe(chatTitle(c))}</div>
+   <div class="chat-preview">${safe(preview)}</div></div>
+   <div class="chat-time">${last?timeText(last.time):''}</div>
+  </div>`;
+ }).join('')||'<p class="muted" style="text-align:center;padding:25px">Чатов пока нет</p>';
+}
+function createDirectChat(user){
+ if(user.id===currentUser.id){toast('Это твой аккаунт');return}
+ let chat=chats.find(c=>c.type==='direct'&&c.members.includes(currentUser.id)&&c.members.includes(user.id));
+ if(!chat){
+  chat={id:makeId(),type:'direct',members:[currentUser.id,user.id],messages:[],created:Date.now()};
+  chats.push(chat);saveAll();
+ }
+ renderChats();openChat(chat.id);closeModal();
+}
 function openChat(id){
- activeChat=id;
- const chat=data.chats.find(c=>c.id===id);
- if(!chat)return;
- chat.unread=0;
- save();
- $("welcome").classList.add("hidden");
- $("settingsScreen").classList.add("hidden");
- $("chatScreen").classList.remove("hidden");
- $("chatTitle").textContent=chat.name;
- $("chatAvatar").textContent=initial(chat.name);
- $("chatSubtitle").textContent="Локальная переписка";
- $("messageInput").placeholder=currentWords().message;
- $("app").classList.add("open-chat");
+ const chat=getChat(id);if(!chat)return;
+ currentChatId=id;
+ welcome.classList.add('hidden');conversation.classList.remove('hidden');
+ appLayout.classList.add('chat-open');
+ document.getElementById('headerName').textContent=chatTitle(chat);
+ document.getElementById('headerStatus').textContent=chat.type==='group'?'Групповой чат':'MERKS';
+ document.getElementById('headerAvatar').textContent=chat.type==='group'?'👥':avatarText(chatTitle(chat));
  renderMessages();renderChats();
 }
-
-function closeChat(){
- $("app").classList.remove("open-chat");
-}
-
+function closeMobileChat(){appLayout.classList.remove('chat-open')}
 function renderMessages(){
- const chat=data.chats.find(c=>c.id===activeChat);
- if(!chat)return;
- const box=$("messages");
- box.innerHTML="";
- chat.messages.forEach(message=>{
-  const el=document.createElement("div");
-  el.className="message"+(message.mine?" mine":"");
-  if(message.type==="audio"){
-   if(message.audio){
-    const audio=document.createElement("audio");
-    audio.controls=true;
-    audio.src=message.audio;
-    el.appendChild(audio);
-   }else{
-    el.textContent="Голосовая запись недоступна";
-   }
-  }else{
-   const content=document.createElement("div");
-   content.textContent=message.text;
-   el.appendChild(content);
-  }
-  const time=document.createElement("div");
-  time.className="message-time";
-  time.textContent=message.time+(message.mine?" ✓":"");
-  el.appendChild(time);
-  box.appendChild(el);
- });
- box.scrollTop=box.scrollHeight;
+ const chat=getChat(currentChatId);if(!chat)return;
+ messages.innerHTML=chat.messages.map(m=>{
+  const mine=m.sender===currentUser.id;
+  const content=m.type==='audio'
+   ?`<audio controls src="${m.data}"></audio>`
+   :safe(m.text);
+  return `<div class="message ${mine?'mine':''}">${content}<small>${mine?'Вы · ':''}${timeText(m.time)}</small></div>`;
+ }).join('');
+ messages.scrollTop=messages.scrollHeight;
 }
-
 function sendMessage(){
- const input=$("messageInput");
- const text=input.value.trim();
- if(!text||!activeChat)return;
- const chat=data.chats.find(c=>c.id===activeChat);
- chat.messages.push({
-  id:Date.now(),text,type:"text",time:timeNow(),
-  date:dateNow(),mine:true,pending:!navigator.onLine
- });
- input.value="";
- save();renderMessages();renderChats();
- toast(currentWords().sent);
- if(data.settings.sound)playSound();
+ const input=messageInput,text=input.value.trim();
+ if(!text||!currentChatId)return;
+ const chat=getChat(currentChatId);
+ chat.messages.push({id:makeId(),sender:currentUser.id,text,type:'text',time:Date.now()});
+ input.value='';saveAll();renderMessages();renderChats();
+}
+function addEmoji(){
+ const emoji=prompt('Введи эмодзи:', '😊');
+ if(emoji)messageInput.value+=emoji;
+ messageInput.focus();
 }
 
-function handleEnter(event){
- if(event.key==="Enter"&&!event.shiftKey){
-  event.preventDefault();sendMessage();
- }
-}
-
-function toggleEmoji(){
- const panel=$("emojiPanel");
- panel.classList.toggle("hidden");
- if(panel.children.length)return;
- ["😀","😂","😊","😍","🥰","😎","😉","😭","😢","😡",
-  "❤️","🔥","👍","👎","🙏","🤝","🎉","✨","💙","🖤",
-  "😘","🤔","😴","🤣","💪","⭐","🐦‍⬛","🌙","⚡","🦅"
- ].forEach(emoji=>{
-  const button=document.createElement("button");
-  button.textContent=emoji;
-  button.onclick=()=>{
-   $("messageInput").value+=emoji;
-   $("messageInput").focus();
-   panel.classList.add("hidden");
-  };
-  panel.appendChild(button);
- });
-}
-
-async function recordVoice(){
- if(recording&&recorder){
-  recorder.stop();
-  recording=false;
-  $("recordButton").textContent="🎙";
-  return;
- }
+/* ГОЛОСОВЫЕ СООБЩЕНИЯ */
+async function toggleRecording(){
+ if(!currentChatId){toast('Сначала открой чат');return}
+ if(recorder&&recorder.state==='recording'){recorder.stop();return}
  if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){
-  toast("Запись не поддерживается этим браузером");return;
+  toast('Запись не поддерживается этим браузером');return;
  }
- if(!activeChat){toast("Сначала открой переписку");return}
  try{
-  recordingStream=await navigator.mediaDevices.getUserMedia({audio:true});
-  chunks=[];
-  recorder=new MediaRecorder(recordingStream);
-  recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
+  const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+  recordedChunks=[];
+  recorder=new MediaRecorder(stream);
+  recorder.ondataavailable=e=>{if(e.data.size)recordedChunks.push(e.data)};
   recorder.onstop=()=>{
-   const blob=new Blob(chunks,{type:recorder.mimeType||"audio/webm"});
+   const blob=new Blob(recordedChunks,{type:recorder.mimeType||'audio/webm'});
    const reader=new FileReader();
    reader.onload=()=>{
-    const chat=data.chats.find(c=>c.id===activeChat);
+    const chat=getChat(currentChatId);
     if(chat){
-     chat.messages.push({
-      id:Date.now(),type:"audio",audio:reader.result,
-      time:timeNow(),date:dateNow(),mine:true,pending:!navigator.onLine
-     });
-     try{save()}catch(e){toast("Не хватило места для записи");}
-     renderMessages();renderChats();
-     toast("Голосовое сообщение сохранено");
+     chat.messages.push({id:makeId(),sender:currentUser.id,type:'audio',data:reader.result,time:Date.now()});
+     saveAll();renderMessages();renderChats();
     }
    };
    reader.readAsDataURL(blob);
-   recordingStream.getTracks().forEach(t=>t.stop());
+   stream.getTracks().forEach(t=>t.stop());
+   recordingLabel.classList.add('hidden');voiceButton.textContent='🎙';
   };
-  recorder.start();
-  recording=true;
-  $("recordButton").textContent="⏹";
-  toast("Запись идёт. Нажми ещё раз для завершения.");
- }catch(error){
-  toast("Разреши доступ к микрофону");
- }
+  recorder.start();recordingLabel.classList.remove('hidden');voiceButton.textContent='■';
+ }catch(e){toast('Разреши доступ к микрофону')}
 }
 
-function chatOptions(){
- if(!activeChat)return;
- const action=prompt("Введи команду:\n1 — Переименовать чат\n2 — Очистить историю\n3 — Удалить чат");
- if(action==="1"){
-  const chat=data.chats.find(c=>c.id===activeChat);
-  const name=prompt("Новое имя:",chat.name);
-  if(name?.trim()){chat.name=name.trim();save();openChat(activeChat)}
- }else if(action==="2"){
-  if(confirm("Очистить историю?")){
-   const chat=data.chats.find(c=>c.id===activeChat);
-   chat.messages=[];save();renderMessages();renderChats();
-  }
- }else if(action==="3"){
-  if(confirm("Удалить переписку?")){
-   data.chats=data.chats.filter(c=>c.id!==activeChat);
-   activeChat=null;save();renderChats();
-   $("chatScreen").classList.add("hidden");
-   $("welcome").classList.remove("hidden");
-  }
- }
+/* ПОИСК ПОЛЬЗОВАТЕЛЕЙ */
+function openSearch(){
+ openModal(`<h2>Поиск пользователей</h2>
+ <p class="muted">Найди аккаунты, зарегистрированные в этом браузере, по имени или номеру телефона.</p>
+ <input class="search-input" id="peopleQuery" placeholder="Имя или номер телефона..." oninput="searchPeople()">
+ <div id="peopleResults" style="margin-top:12px"></div>
+ <div class="modal-actions"><button class="secondary" onclick="closeModal()">Закрыть</button></div>`);
+ searchPeople();
+}
+function searchPeople(){
+ const q=(document.getElementById('peopleQuery')?.value||'').toLowerCase().trim();
+ const results=accounts.filter(a=>a.id!==currentUser.id&&(!q||a.name.toLowerCase().includes(q)||a.phone.includes(q)));
+ const target=document.getElementById('peopleResults');if(!target)return;
+ target.innerHTML=results.map(a=>`<div class="user-result">
+ <div class="avatar">${avatarText(a.name)}</div><div class="grow"><b>${safe(a.name)}</b><div class="muted">${safe(a.phone)}</div></div>
+ <button class="primary" onclick="createDirectChat(accounts.find(x=>x.id==='${a.id}'))">Написать</button></div>`).join('')||'<p class="muted">Пользователи не найдены.</p>';
 }
 
-function showSettings(){
- $("welcome").classList.add("hidden");
- $("chatScreen").classList.add("hidden");
- $("settingsScreen").classList.remove("hidden");
- $("profileName").value=data.user.name;
- $("profilePhone").textContent=data.user.phone;
- $("themeSelect").value=data.settings.theme;
- $("languageSelect").value=data.settings.language;
- $("starsToggle").checked=data.settings.stars;
- $("soundToggle").checked=data.settings.sound;
- $("networkText").textContent=navigator.onLine?"В сети":"Без интернета";
+/* ГРУППЫ */
+function openGroupModal(){
+ openModal(`<h2>Новая группа</h2>
+ <div class="field"><label>Название группы</label><input id="groupName" placeholder="Например, Друзья"></div>
+ <p class="muted">Выбери участников. Можно добавить только аккаунты, сохранённые в этом браузере.</p>
+ <div id="groupMembers"></div>
+ <div class="modal-actions"><button class="secondary" onclick="closeModal()">Отмена</button><button class="primary" onclick="createGroup()">Создать</button></div>`);
+ groupMembers.innerHTML=accounts.filter(a=>a.id!==currentUser.id).map(a=>
+ `<label style="display:flex;gap:10px;align-items:center;padding:8px 0"><input type="checkbox" value="${a.id}"> ${safe(a.name)} <span class="muted">${safe(a.phone)}</span></label>`
+ ).join('')||'<p class="muted">Пока нет других пользователей.</p>';
+}
+function createGroup(){
+ const name=groupName.value.trim();
+ if(!name){toast('Введи название группы');return}
+ const ids=[...groupMembers.querySelectorAll('input:checked')].map(x=>x.value);
+ const chat={id:makeId(),type:'group',name,members:[currentUser.id,...ids],messages:[],created:Date.now()};
+ chats.push(chat);saveAll();closeModal();renderChats();openChat(chat.id);
 }
 
-function backFromSettings(){
- $("settingsScreen").classList.add("hidden");
- if(activeChat)openChat(activeChat);
- else $("welcome").classList.remove("hidden");
+/* ПРОФИЛЬ */
+function openProfile(){
+ openModal(`<div class="profile-center">
+ <div class="avatar profile-avatar">${currentUser.avatar?`<img src="${currentUser.avatar}">`:avatarText(currentUser.name)}</div>
+ <h2>${safe(currentUser.name)}</h2><p class="muted">${safe(currentUser.phone)}</p></div>
+ <div class="field"><label>Имя профиля</label><input id="editName" value="${safe(currentUser.name)}"></div>
+ <div class="field"><label>О себе</label><textarea id="editBio" rows="3">${safe(currentUser.bio||'')}</textarea></div>
+ <div class="field"><label>Аватар (изображение)</label><input id="avatarFile" type="file" accept="image/*"></div>
+ <div class="modal-actions"><button class="secondary" onclick="closeModal()">Закрыть</button><button class="primary" onclick="saveProfile()">Сохранить</button></div>
+ <div style="margin-top:15px"><button class="danger-btn full" onclick="logout()">Выйти из аккаунта</button></div>`);
 }
-
 function saveProfile(){
- const name=$("profileName").value.trim();
- if(name.length<2){toast("Имя слишком короткое");return}
- data.user.name=name;
- $("myName").textContent=name;
- setAvatar($("myAvatar"),data.user);
- save();toast("Профиль сохранён");
+ const name=editName.value.trim();if(!name){toast('Имя не может быть пустым');return}
+ currentUser.name=name;currentUser.bio=editBio.value.trim();
+ const file=avatarFile.files[0];
+ const finish=()=>{accounts=accounts.map(a=>a.id===currentUser.id?currentUser:a);saveAll();renderChats();closeModal();toast('Профиль сохранён')};
+ if(file){
+  if(file.size>700000){toast('Выбери изображение меньше 700 КБ');return}
+  const reader=new FileReader();reader.onload=()=>{currentUser.avatar=reader.result;finish()};reader.readAsDataURL(file);
+ }else finish();
 }
-
-function changeAvatar(event){
- const file=event.target.files[0];
- if(!file)return;
- if(!file.type.startsWith("image/")){toast("Выбери изображение");return}
- if(file.size>1024*1024){toast("Изображение должно быть меньше 1 МБ");return}
- const reader=new FileReader();
- reader.onload=()=>{
-  const img=new Image();
-  img.onload=()=>{
-   const canvas=document.createElement("canvas");
-   const max=256;
-   const scale=Math.min(max/img.width,max/img.height,1);
-   canvas.width=img.width*scale;
-   canvas.height=img.height*scale;
-   canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);
-   data.user.avatar=canvas.toDataURL("image/jpeg",.8);
-   setAvatar($("myAvatar"),data.user);
-   save();toast("Аватар обновлён");
-  };
-  img.src=reader.result;
- };
- reader.readAsDataURL(file);
-}
-
-function applySettings(){
- const theme=data.settings.theme;
- const light=theme==="light"||
-  (theme==="system"&&matchMedia("(prefers-color-scheme: light)").matches);
- document.body.classList.toggle("light",light);
- $("themeSelect").value=theme;
-}
-function changeTheme(value){
- data.settings.theme=value;
- save();applySettings();
-}
-function saveSettings(){
- data.settings.stars=$("starsToggle").checked;
- data.settings.sound=$("soundToggle").checked;
- save();toast(currentWords().saved);
-}
-function applyLanguage(){
- const t=currentWords();
- $("tabAll").textContent=t.all;
- $("tabUnread").textContent=t.unread;
- $("search").placeholder=t.search;
- $("messageInput").placeholder=t.message;
- renderChats();
-}
-function changeLanguage(value){
- data.settings.language=value;
- save();applyLanguage();
- toast("Язык изменён");
-}
-function setTab(tab,button){
- currentTab=tab;
- document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
- button.classList.add("active");
- renderChats();
-}
-async function enableNotifications(){
- if(!("Notification"in window)){toast("Уведомления недоступны");return}
- const result=await Notification.requestPermission();
- toast(result==="granted"?"Уведомления разрешены":"Разрешение не получено");
-}
-function playSound(){
- try{
-  const ctx=new AudioContext();
-  const oscillator=ctx.createOscillator();
-  const gain=ctx.createGain();
-  oscillator.connect(gain);gain.connect(ctx.destination);
-  oscillator.frequency.value=660;
-  gain.gain.value=.04;
-  oscillator.start();
-  oscillator.stop(ctx.currentTime+.08);
- }catch(e){}
-}
-function updateNetwork(){
- const text=navigator.onLine?"🟢 Интернет доступен":"🔴 Нет интернета";
- $("connectionStatus").textContent=text;
- if($("networkText"))$("networkText").textContent=text;
-}
-window.addEventListener("online",()=>{
- updateNetwork();toast("Соединение восстановлено");
-});
-window.addEventListener("offline",()=>{
- updateNetwork();toast("Нет интернета. Локальные данные доступны");
-});
-
-// ЗВЁЗДНОЕ НЕБО
-(function(){
- const canvas=$("stars");
- const ctx=canvas.getContext("2d");
- let stars=[];
- function resize(){
-  const ratio=Math.min(devicePixelRatio||1,2);
-  canvas.width=innerWidth*ratio;
-  canvas.height=innerHeight*ratio;
-  ctx.setTransform(ratio,0,0,ratio,0,0);
-  stars=Array.from({length:150},()=>({
-   x:Math.random()*innerWidth,
-   y:Math.random()*innerHeight,
-   r:Math.random()*1.5+.3,
-   phase:Math.random()*6,
-   speed:Math.random()*.02+.003
-  }));
+function openCurrentChatProfile(){
+ const chat=getChat(currentChatId);if(!chat)return;
+ if(chat.type==='group'){
+  openModal(`<h2>${safe(chat.name)}</h2><p class="muted">Участники группы</p>${chat.members.map(id=>{const a=accounts.find(x=>x.id===id);return `<p>${safe(a?.name||'Пользователь')} ${id===currentUser.id?'(вы)':''}</p>`}).join('')}<button class="secondary full" onclick="closeModal()">Закрыть</button>`);
+ }else{
+  const user=otherMember(chat);
+  if(!user)return;
+  openModal(`<div class="profile-center"><div class="avatar profile-avatar">${user.avatar?`<img src="${user.avatar}">`:avatarText(user.name)}</div><h2>${safe(user.name)}</h2><p class="muted">${safe(user.phone)}</p><p>${safe(user.bio||'')}</p></div><button class="secondary full" onclick="closeModal()">Закрыть</button>`);
  }
- function draw(){
-  ctx.clearRect(0,0,innerWidth,innerHeight);
-  stars.forEach(s=>{
-   s.phase+=s.speed;
-   const alpha=.2+.7*(.5+.5*Math.sin(s.phase));
-   ctx.fillStyle=`rgba(195,220,255,${alpha})`;
-   ctx.beginPath();
-   ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-   ctx.fill();
-  });
-  requestAnimationFrame(draw);
- }
- resize();draw();
- window.addEventListener("resize",resize);
-})();
-
-// ЗАПУСК
-function boot(){
- setTimeout(()=>$("splash").classList.add("done"),2200);
- const current=localStorage.getItem("merks_current");
- if(current){
-  const account=getAccounts().find(a=>a.phone===current);
-  if(account){openAccount(account);return}
- }
- setAuthMode("register");
 }
-boot();
+
+/* ЗВОНКИ — ДЕМО-ЭКРАН */
+function startCall(type){
+ if(!currentChatId)return;
+ const chat=getChat(currentChatId);
+ openModal(`<div class="profile-center">
+ <svg class="raven"><use href="#raven-symbol"/></svg>
+ <h2>${type==='video'?'Видеозвонок':'Голосовой звонок'}</h2>
+ <p class="muted">Вызов: ${safe(chatTitle(chat))}</p>
+ <p class="muted">Интерфейс звонков готовится. Для реальных звонков нужно подключить WebRTC и сервер сигнализации.</p>
+ </div><div class="modal-actions"><button class="danger-btn" onclick="closeModal()">Завершить</button></div>`);
+}
+
+/* МОДАЛЬНЫЕ ОКНА */
+function openModal(html){
+ modalContent.innerHTML=html;modalBg.classList.remove('hidden');
+}
+function closeModal(){modalBg.classList.add('hidden');modalContent.innerHTML=''}
 </script>
 </body>
 </html>
-
